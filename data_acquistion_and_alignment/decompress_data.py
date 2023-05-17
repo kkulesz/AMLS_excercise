@@ -3,10 +3,7 @@ import bz2
 import gzip
 
 import const
-
-
-def listdir_fullpath(directory):
-    return [os.path.join(directory, f) for f in os.listdir(directory)]
+import utils
 
 
 def decompress_bz2_files(list_of_files):
@@ -30,7 +27,7 @@ def decompress_gzip_files(list_of_files):
 
 
 if __name__ == "__main__":
-    files = listdir_fullpath(const.DATA_DIR)
+    files = utils.listdir_fullpath(const.DATA_DIR)
 
-    # decompress_bz2_files(files)
-    decompress_gzip_files(files)
+    decompress_bz2_files(files)
+    # decompress_gzip_files(files)
