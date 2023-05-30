@@ -7,7 +7,7 @@ import utils
 
 
 def decompress_bz2_files(list_of_files):
-    bz2_files = filter(lambda file_name: file_name.endswith(".bz2"), files)
+    bz2_files = filter(lambda file_name: file_name.endswith(".bz2"), list_of_files)
     for file in bz2_files:
         with bz2.open(file, "rb") as f:
             data = f.read()
@@ -17,7 +17,7 @@ def decompress_bz2_files(list_of_files):
 
 
 def decompress_gzip_files(list_of_files):
-    gzip_files = filter(lambda file_name: file_name.endswith(".gz"), files)
+    gzip_files = filter(lambda file_name: file_name.endswith(".gz"), list_of_files)
     for file in gzip_files:
         with gzip.open(file, "rb") as f:
             data = f.read()

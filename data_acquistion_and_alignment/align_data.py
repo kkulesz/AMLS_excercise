@@ -18,25 +18,53 @@ def align_single(ref_header, band_path):
     curr_header = curr_band_file[0].header
     curr_wcs = WCS(curr_header)
     curr_data = curr_band_file[0].data
-    curr_shape = curr_data.shape
+    ref_x, ref_y = curr_data.shape
 
+    # x_offset = ref_header['CRPIX1'] - curr_header['CRPIX1'] # ZERO?
+    # y_offset = ref_header['CRPIX2'] - curr_header['CRPIX2'] # ZERO?
+    ##############################################################################
     target_ra = ref_header['CRVAL1']
     target_dec = ref_header['CRVAL2']
 
     target_coord = SkyCoord(target_ra, target_dec, unit='deg')
     cutout = Cutout2D(curr_data, target_coord, curr_data.shape, wcs=curr_wcs)
     cutout_header = cutout.wcs.to_header()
+
+    res_x, res_y = cutout.data.shape
+    off_x = ref_x - res_x
+    off_y = ref_y - res_y
+    # print(off_x)
+    # print(off_y)
+
+    # res = curr_data
     res = cutout.data
 
-    # res_shape = cutout.data.shape
-    # pad_width = ((0, curr_shape[0] - res_shape[0]),
-    #              (0, curr_shape[1] - res_shape[1]))
-    # res = np.pad(cutout.data.shape, pad_width, mode='constant')
+    # res = np.roll(cutout.data, (off_x, off_y), axis=(0, 1))
+    # res = np.roll(cutout.data, (-off_x, -off_y), axis=(0, 1))
 
+    # res = np.roll(cutout.data, (off_y, off_x), axis=(0, 1))
+    # res = np.roll(cutout.data, (-off_y, -off_x), axis=(0, 1))
+    ##############################################################################
+    # ref_crpix1 = ref_header['CRPIX1']
+    # ref_crpix2 = ref_header['CRPIX2']
+    # curr_crpix1 = curr_header['CRPIX1']
+    # curr_crpix2 = curr_header['CRPIX2']
+    # # Convert pixel coordinates to world coordinates
+    # ref_world = ref_wcs.pixel_to_world(ref_crpix1, ref_crpix2)
+    # curr_world = curr_wcs.pixel_to_world(curr_crpix1, curr_crpix2)
+    # # Calculate the offset in pixel coordinates
+    # delta_pix = ref_wcs.world_to_pixel(curr_world) - np.array([ref_crpix1, ref_crpix2])
+    # aligned_data = np.zeros_like(curr_data)
+    # # Shift the current band data to align with the reference band
+    # aligned_data += np.roll(curr_data, int(round(delta_pix[0])) - 1, axis=1)
+    # aligned_data += np.roll(curr_data, int(round(delta_pix[1])) - 1, axis=0)
+    ##############################################################################
 
     curr_band_file.close()
 
-    return res[500:1000, 500:1500]
+    # return aligned_data[500:1000, 500:1500]
+    return res[100:1000, 100:1500]
+    # return curr_data[100:1000, 100:1500]
 
 
 def align_spectral_bands(list_of_bands):
@@ -53,14 +81,13 @@ def align_spectral_bands(list_of_bands):
 
     rotated_g = align_single(ref_header, g)
     # rotated_r = align_single(ref_wcs, r)
-    rotated_u = align_single(ref_header, u)
-    # rotated_i = align_single(ref_header, i)
+    # rotated_u = align_single(ref_header, u)
+    rotated_i = align_single(ref_header, i)
     # rotated_z = align_single(ref_wcs, z)
 
     ref_file.close()
 
-    rgb_default = make_lupton_rgb(ref_data[500:1000, 500:1500], rotated_g, rotated_u, stretch=1.5, Q=10)
-    # rgb_default = make_lupton_rgb(r_data, g_data, u_data, stretch=1.5, Q=10)
+    rgb_default = make_lupton_rgb(rotated_i, ref_data[100:1000, 100:1500], rotated_g, stretch=1.5, Q=10)
     plt.imshow(rgb_default, origin="lower")
     plt.show()
 
