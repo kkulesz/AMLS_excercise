@@ -18,10 +18,7 @@ def align_single(ref_header, band_path):
     curr_header = curr_band_file[0].header
     curr_wcs = WCS(curr_header)
     curr_data = curr_band_file[0].data
-    ref_x, ref_y = curr_data.shape
 
-    # x_offset = ref_header['CRPIX1'] - curr_header['CRPIX1'] # ZERO?
-    # y_offset = ref_header['CRPIX2'] - curr_header['CRPIX2'] # ZERO?
     ##############################################################################
     target_ra = ref_header['CRVAL1']
     target_dec = ref_header['CRVAL2']
@@ -30,9 +27,8 @@ def align_single(ref_header, band_path):
     cutout = Cutout2D(curr_data, target_coord, curr_data.shape, wcs=curr_wcs)
     cutout_header = cutout.wcs.to_header()
 
-    res_x, res_y = cutout.data.shape
-    off_x = ref_x - res_x
-    off_y = ref_y - res_y
+    off_x = int(cutout_header['CRPIX1'] - ref_header['CRPIX1'])
+    off_y = int(cutout_header['CRPIX2'] - ref_header['CRPIX2'])
     # print(off_x)
     # print(off_y)
 
@@ -41,28 +37,12 @@ def align_single(ref_header, band_path):
 
     # res = np.roll(cutout.data, (off_x, off_y), axis=(0, 1))
     # res = np.roll(cutout.data, (-off_x, -off_y), axis=(0, 1))
-
+    #
     # res = np.roll(cutout.data, (off_y, off_x), axis=(0, 1))
     # res = np.roll(cutout.data, (-off_y, -off_x), axis=(0, 1))
-    ##############################################################################
-    # ref_crpix1 = ref_header['CRPIX1']
-    # ref_crpix2 = ref_header['CRPIX2']
-    # curr_crpix1 = curr_header['CRPIX1']
-    # curr_crpix2 = curr_header['CRPIX2']
-    # # Convert pixel coordinates to world coordinates
-    # ref_world = ref_wcs.pixel_to_world(ref_crpix1, ref_crpix2)
-    # curr_world = curr_wcs.pixel_to_world(curr_crpix1, curr_crpix2)
-    # # Calculate the offset in pixel coordinates
-    # delta_pix = ref_wcs.world_to_pixel(curr_world) - np.array([ref_crpix1, ref_crpix2])
-    # aligned_data = np.zeros_like(curr_data)
-    # # Shift the current band data to align with the reference band
-    # aligned_data += np.roll(curr_data, int(round(delta_pix[0])) - 1, axis=1)
-    # aligned_data += np.roll(curr_data, int(round(delta_pix[1])) - 1, axis=0)
-    ##############################################################################
 
     curr_band_file.close()
 
-    # return aligned_data[500:1000, 500:1500]
     return res[100:1000, 100:1500]
     # return curr_data[100:1000, 100:1500]
 
@@ -96,33 +76,6 @@ def align_spectral_bands(list_of_bands):
     # plt.show()
 
     # plt.savefig("base.jpg")
-    # print(ref_wcs)
-    # print(ref_wcs.pixel_to_world)
-    # print(ref_wcs.world_to_pixel)
-    # print(ref_wcs)
-
-    # ref_band = fits.open(r)
-    # ref_header = ref_band[0].header
-    # print(ref_header['CRPIX1'])
-    # print(ref_header['CRPIX2'])
-    # print(ref_header['CRVAL1'])
-    # print(ref_header['CRVAL2'])
-    # print(ref_header['CD1_1'])
-    # print(ref_header['CD1_2'])
-    # print(ref_header['CD2_1'])
-    # print(ref_header['CD2_2'])
-    #
-    # print("---"* 30)
-    # ref_band = fits.open(g)
-    # ref_header = ref_band[0].header
-    # print(ref_header['CRPIX1'])
-    # print(ref_header['CRPIX2'])
-    # print(ref_header['CRVAL1'])
-    # print(ref_header['CRVAL2'])
-    # print(ref_header['CD1_1'])
-    # print(ref_header['CD1_2'])
-    # print(ref_header['CD2_1'])
-    # print(ref_header['CD2_2'])
 
 
 if __name__ == "__main__":
