@@ -54,8 +54,9 @@ if __name__ == "__main__":
     #   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0082.fits.bz2
     #   and so on...
     urls_meta_numbers = [
-        (8162, 80, 81),  # 80, 237
-        # (8110, 11, 225)
+        # (8162, 80, 237),
+        # (8110, 11, 225),
+        # (3918, 28, 434),
     ]
 
     for (run_num, min_seq, max_seq) in urls_meta_numbers:

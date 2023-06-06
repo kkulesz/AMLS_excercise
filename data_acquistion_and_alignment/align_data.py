@@ -38,8 +38,8 @@ def align_single(ref_header, band_path):
 
     translation_matrix = np.float32([[1, 0, x_shift], [0, 1, y_shift]])
     img = np.float32(band_data)
-
-    return cv2.warpAffine(img, translation_matrix, (num_cols, num_rows))
+    img = cv2.warpAffine(img, translation_matrix, (num_cols, num_rows))
+    return img
 
 
 def align_spectral_bands(list_of_bands):
@@ -54,20 +54,20 @@ def align_spectral_bands(list_of_bands):
     ref_wcs = WCS(ref_header)
     ref_data = ref_file[0].data
 
-    rotated_g = align_single(ref_header, g)
-    # rotated_r = align_single(ref_wcs, r)
-    rotated_u = align_single(ref_header, u)
-    rotated_i = align_single(ref_header, i)
-    rotated_z = align_single(ref_header, z)
+    aligned_g = align_single(ref_header, g)
+    aligned_u = align_single(ref_header, u)
+    aligned_i = align_single(ref_header, i)
+    aligned_z = align_single(ref_header, z)
 
     ref_file.close()
 
-    result = np.dstack((rotated_i, ref_data, rotated_g, rotated_u, rotated_z))
+    result = np.dstack((aligned_i, ref_data, aligned_g, aligned_u, aligned_z))
+    result = cv2.flip(result, 0)
 
     # ##### PLOTTING CODE
     # img = result[:, :, :3]  # take irg channels for plotting
     # img = np.maximum(0, img)
-    # img = np.power(img, 0.5)  # square root to make the high value pixels less dominant
+    # # img = np.power(img, 0.5)  # square root to make the high value pixels less dominant
     # plt.figure()
     # plt.axis("off")
     # plt.subplots_adjust(left=0.0, right=1.0, top=1.0, bottom=0.0, wspace=0.0, hspace=0.0)
