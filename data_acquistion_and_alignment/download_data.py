@@ -41,9 +41,9 @@ if __name__ == "__main__":
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
-    if len(os.listdir(data_dir)) != 0:
-        print(f"'{data_dir}' directory is not empty, data is already downloaded probably - aborting!")
-        exit(1)
+    # if len(os.listdir(data_dir)) != 0:
+    #     print(f"'{data_dir}' directory is not empty, data is already downloaded probably - aborting!")
+    #     exit(1)
 
     # list of tuples to easily modify urls
     # format: (<run_num>, <min_seq_number>, <max_seq_number>)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     ]
 
     for (run_num, min_seq, max_seq) in urls_meta_numbers:
-        for camera_col in range(1, 6):
+        for camera_col in range(1, 7):
 
             # download coordinate files
             for cords_of_what in ["gal", "star"]:  # 2 * ~35MB = ~~70MB

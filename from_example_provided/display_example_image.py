@@ -13,4 +13,4 @@ if __name__ == "__main__":
     plt.axis("off")
     plt.subplots_adjust(left=0.0, right=1.0, top=1.0, bottom=0.0, wspace=0.0, hspace=0.0)
     plt.imshow(img)
-    plt.savefig("003918-3-0213_img.pdf")
+    # plt.savefig("003918-3-0213_img.pdf")
