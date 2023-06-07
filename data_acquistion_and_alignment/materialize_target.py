@@ -44,6 +44,7 @@ def materialize_target(img_numpy_file, gal_csv, star_csv):
     np.save(target_path, target_image, allow_pickle=True)
     np.save(marked_path, marked_image, allow_pickle=True)
 
+
 if __name__ == "__main__":
     coords_files = utils.listdir_fullpath(const.COORDS_DATA_DIR)
     gals_files = list(filter(lambda f: re.search("gal", f), coords_files))

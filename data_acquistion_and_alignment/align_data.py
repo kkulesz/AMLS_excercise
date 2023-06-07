@@ -2,7 +2,6 @@ import numpy as np
 from astropy.io import fits
 from astropy.wcs import WCS
 from astropy.coordinates import SkyCoord
-import matplotlib.pyplot as plt
 import cv2
 import re
 import os
@@ -15,11 +14,9 @@ def align_single(ref_header, band_path):
     ref_wcs = WCS(ref_header)
     ref_ra = ref_header['CRVAL1']
     ref_dec = ref_header['CRVAL2']
-    ref_skycoord = SkyCoord(ref_ra, ref_dec, unit='deg')
 
     band_file = fits.open(band_path)
     band_header = band_file[0].header
-    band_wcs = WCS(band_header)
     band_data = band_file[0].data
 
     num_rows, num_cols = band_data.shape[:2]
@@ -62,7 +59,7 @@ def align_spectral_bands(list_of_bands):
     ref_file.close()
 
     result = np.dstack((aligned_i, ref_data, aligned_g, aligned_u, aligned_z))
-    # result = cv2.flip(result, 0)
+    # result = cv2.flip(result, 0) # TODO: should i?
 
     # utils.display_image(result)
 

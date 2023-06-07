@@ -3,7 +3,6 @@ from astropy.table import Table
 from astropy.wcs import WCS
 from astropy.coordinates import SkyCoord
 import re
-import numpy as np
 import pandas as pd
 import os
 
@@ -14,14 +13,6 @@ import const
 def process_coords(coords_fits, bands_fits, obj_type):
     coords_file = fits.open(coords_fits)
     raw_table = Table(coords_file[1].data)
-
-    # informative_columns = ['RUN', 'RERUN', 'CAMCOL', 'RA', 'DEC']
-    # coords_data = fits. \
-    #     BinTableHDU. \
-    #     from_columns(
-    #     [fits.Column(name=c, format=raw[c].dtype, array=raw[c]) for c in informative_columns]
-    # ).data
-    # filtered_data = raw[(raw['RUN'] == 3918) & (raw['CAMCOL'] == 1)]
 
     # TODO: change it later, because it is not optimal
     for b_f in bands_fits:
@@ -35,7 +26,7 @@ def process_coords(coords_fits, bands_fits, obj_type):
             obj_dec = row['DEC']
             obj_skycoord = SkyCoord(obj_ra, obj_dec, unit='deg')
             xp, yp = obj_skycoord.to_pixel(band_wcs)
-            if (xp >= 0 and xp <= cols) and (yp >= 0 and yp <= rows):  # check if object fits the image
+            if (0 <= xp <= cols) and (0 <= yp <= rows):  # check if object fits the image
                 obj_array.append([xp, yp])
         result_filename = re.search(const.IMG_ID_REGEX, b_f).group()
         print(f"Saving {result_filename}_{obj_type}.csv...")
@@ -44,7 +35,7 @@ def process_coords(coords_fits, bands_fits, obj_type):
             to_csv(
                 os.path.join(const.COORDS_DATA_DIR, f"{result_filename}_{obj_type}.csv"),
                 index=False
-        )
+            )
 
         band_file.close()
 
