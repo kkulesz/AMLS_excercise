@@ -30,4 +30,4 @@ if __name__ == "__main__":
     files = utils.listdir_fullpath(const.DATA_DIR)
 
     decompress_bz2_files(files)
-    # decompress_gzip_files(files)
+    decompress_gzip_files(files)

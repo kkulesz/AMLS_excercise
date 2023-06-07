@@ -29,8 +29,8 @@ def align_single(ref_header, band_path):
     band_skycoord = SkyCoord(band_ra, band_dec, unit='deg')
 
     other_image_pixel_coords = band_skycoord.to_pixel(ref_wcs)
-    other_x = int(other_image_pixel_coords[0])
-    other_y = int(other_image_pixel_coords[1])
+    other_x = other_image_pixel_coords[0]
+    other_y = other_image_pixel_coords[1]
     ref_x = ref_header['CRPIX1']
     ref_y = ref_header['CRPIX2']
     x_shift = other_x - ref_x
@@ -64,7 +64,7 @@ def align_spectral_bands(list_of_bands):
     result = np.dstack((aligned_i, ref_data, aligned_g, aligned_u, aligned_z))
     result = cv2.flip(result, 0)
 
-    # ##### PLOTTING CODE
+    ##### PLOTTING CODE
     # img = result[:, :, :3]  # take irg channels for plotting
     # img = np.maximum(0, img)
     # # img = np.power(img, 0.5)  # square root to make the high value pixels less dominant
@@ -79,13 +79,13 @@ def align_spectral_bands(list_of_bands):
 
 if __name__ == "__main__":
     files = utils.listdir_fullpath(const.DATA_DIR)
-    fits_files = list(filter(lambda file_name: file_name.endswith(".fits"), files))
+    fits_files = list(filter(lambda f: re.search("[0-9]{4}.fits$", f), files))
 
     # grouping bands of the same image
-    regex = "[0-9]{6}-[1-6]-[0-9]{4}"
+    img_id_regex = "[0-9]{6}-[1-6]-[0-9]{4}"
     grouping_dict = {}
     for f in fits_files:
-        img_id = re.search(regex, f).group()
+        img_id = re.search(img_id_regex, f).group()
         if img_id in grouping_dict:
             grouping_dict[img_id].append(f)
         else:
@@ -96,6 +96,6 @@ if __name__ == "__main__":
         image_id, bands = item
         aligned_bands = align_spectral_bands(bands)
 
-        path = os.path.join(const.DATA_DIR, "aligned", f"{image_id}")
+        path = os.path.join(const.ALIGNED_DATA_DIR, f"{image_id}")
         np.save(path, aligned_bands, allow_pickle=True)
 
