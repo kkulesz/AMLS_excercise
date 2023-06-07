@@ -82,10 +82,9 @@ if __name__ == "__main__":
     fits_files = list(filter(lambda f: re.search("[0-9]{4}.fits$", f), files))
 
     # grouping bands of the same image
-    img_id_regex = "[0-9]{6}-[1-6]-[0-9]{4}"
     grouping_dict = {}
     for f in fits_files:
-        img_id = re.search(img_id_regex, f).group()
+        img_id = re.search(const.IMG_ID_REGEX, f).group()
         if img_id in grouping_dict:
             grouping_dict[img_id].append(f)
         else:

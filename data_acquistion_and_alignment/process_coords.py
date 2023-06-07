@@ -37,7 +37,7 @@ def process_coords(coords_fits, bands_fits, obj_type):
             xp, yp = obj_skycoord.to_pixel(band_wcs)
             if (xp >= 0 and xp <= cols) and (yp >= 0 and yp <= rows):  # check if object fits the image
                 obj_array.append([xp, yp])
-        result_filename = re.search(r"[0-9]{6}-[1-6]-[0-9]{4}", b_f).group()
+        result_filename = re.search(const.IMG_ID_REGEX, b_f).group()
         print(f"Saving {result_filename}_{obj_type}.csv...")
         pd.DataFrame(obj_array).to_csv(os.path.join(const.COORDS_DATA_DIR, f"{result_filename}_{obj_type}.csv"))
 
