@@ -39,7 +39,12 @@ def process_coords(coords_fits, bands_fits, obj_type):
                 obj_array.append([xp, yp])
         result_filename = re.search(const.IMG_ID_REGEX, b_f).group()
         print(f"Saving {result_filename}_{obj_type}.csv...")
-        pd.DataFrame(obj_array).to_csv(os.path.join(const.COORDS_DATA_DIR, f"{result_filename}_{obj_type}.csv"))
+        pd. \
+            DataFrame(obj_array). \
+            to_csv(
+                os.path.join(const.COORDS_DATA_DIR, f"{result_filename}_{obj_type}.csv"),
+                index=False
+        )
 
         band_file.close()
 
@@ -76,6 +81,6 @@ if __name__ == "__main__":
         gal, bands = item
         process_coords(gal, bands, "gals")
 
-    for item in star_bands_dict.items():
-        star, bands = item
-        process_coords(star, bands, "stars")
+    # for item in star_bands_dict.items():
+    #     star, bands = item
+    #     process_coords(star, bands, "stars")
