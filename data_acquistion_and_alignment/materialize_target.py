@@ -18,7 +18,6 @@ def color_pixels(img, df_of_pixels, channel):
 
 
 def materialize_target(img_numpy_file, gal_csv, star_csv):
-    print(img_numpy_file)
     img = np.load(img_numpy_file)
     gal_df = pd.read_csv(gal_csv, skiprows=0)
     star_df = pd.read_csv(star_csv, skiprows=0)
@@ -38,7 +37,7 @@ def materialize_target(img_numpy_file, gal_csv, star_csv):
     # utils.display_image(target_image)
     # utils.display_image(marked_image)
 
-    img_id = re.search(const.IMG_ID_REGEX, img_f).group()
+    img_id = re.search(const.IMG_ID_REGEX, img_numpy_file).group()
     target_path = os.path.join(const.TARGET_DATA_DIR, f"{img_id}_target")
     marked_path = os.path.join(const.TARGET_DATA_DIR, f"{img_id}_marked")
     np.save(target_path, target_image, allow_pickle=True)
