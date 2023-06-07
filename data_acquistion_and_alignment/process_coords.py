@@ -5,6 +5,7 @@ from astropy.coordinates import SkyCoord
 import re
 import numpy as np
 import pandas as pd
+import os
 
 import utils
 import const
@@ -38,7 +39,7 @@ def process_coords(coords_fits, bands_fits, obj_type):
                 obj_array.append([xp, yp])
         result_filename = re.search(r"[0-9]{6}-[1-6]-[0-9]{4}", b_f).group()
         print(f"Saving {result_filename}_{obj_type}.csv...")
-        pd.DataFrame(obj_array).to_csv(f"{result_filename}_{obj_type}.csv")
+        pd.DataFrame(obj_array).to_csv(os.path.join(const.COORDS_DATA_DIR, f"{result_filename}_{obj_type}.csv"))
 
         band_file.close()
 
