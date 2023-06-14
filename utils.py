@@ -22,3 +22,14 @@ def display_image(img):
     plt.subplots_adjust(left=0.0, right=1.0, top=1.0, bottom=0.0, wspace=0.0, hspace=0.0)
     plt.imshow(img)
     plt.show()
+
+
+def get_device():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Working on {device} device.")
+
+    return device
+
+
+def take_smaller_patch(img, W=100, H=100):
+    return img[0:W, 0:H, :]
