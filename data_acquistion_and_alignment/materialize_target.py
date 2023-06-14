@@ -45,6 +45,8 @@ def materialize_target(img_numpy_file, gal_csv, star_csv):
 
 
 if __name__ == "__main__":
+    utils.create_dir_if_doesnt_exist(const.TARGET_DATA_DIR)
+
     coords_files = utils.listdir_fullpath(const.COORDS_DATA_DIR)
     gals_files = list(filter(lambda f: re.search("gal", f), coords_files))
     stars_files = list(filter(lambda f: re.search("star", f), coords_files))

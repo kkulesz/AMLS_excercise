@@ -3,6 +3,7 @@ import wget
 import logging
 
 import const
+import utils
 
 BASE_URL = "https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301"
 BASE_CORDS_URL = "https://data.sdss.org/sas/dr17/eboss/sweeps/dr13_final/301/calibObj"
@@ -37,9 +38,7 @@ def download_or_log_on_fail(url, dir):
 
 if __name__ == "__main__":
     data_dir = const.DATA_DIR
-
-    if not os.path.exists(data_dir):
-        os.makedirs(data_dir)
+    utils.create_dir_if_doesnt_exist(data_dir)
 
     # if len(os.listdir(data_dir)) != 0:
     #     print(f"'{data_dir}' directory is not empty, data is already downloaded probably - aborting!")

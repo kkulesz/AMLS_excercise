@@ -67,6 +67,8 @@ def align_spectral_bands(list_of_bands):
 
 
 if __name__ == "__main__":
+    utils.create_dir_if_doesnt_exist(const.ALIGNED_DATA_DIR)
+
     files = utils.listdir_fullpath(const.DATA_DIR)
     fits_files = list(filter(lambda f: re.search("[0-9]{4}.fits$", f), files))
 

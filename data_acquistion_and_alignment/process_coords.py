@@ -44,6 +44,8 @@ def process_coords(coords_fits, bands_fits, obj_type):
 
 
 if __name__ == "__main__":
+    utils.create_dir_if_doesnt_exist(const.COORDS_DATA_DIR)
+
     files = utils.listdir_fullpath(const.DATA_DIR)
 
     r_band_regex = "r-[0-9]{6}-[1-6]-[0-9]{4}.fits$"

@@ -1,10 +1,16 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
 
 
 def listdir_fullpath(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory)]
+
+
+def create_dir_if_doesnt_exist(data_dir):
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
 
 
 def display_image(img):
