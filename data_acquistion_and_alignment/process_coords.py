@@ -72,6 +72,6 @@ if __name__ == "__main__":
         gal, bands = item
         process_coords(gal, bands, "gals")
 
-    # for item in star_bands_dict.items():
-    #     star, bands = item
-    #     process_coords(star, bands, "stars")
+    for item in star_bands_dict.items():
+        star, bands = item
+        process_coords(star, bands, "stars")
