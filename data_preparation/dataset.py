@@ -30,9 +30,6 @@ class SdssDataset(Dataset):
         input_data = np.load(input_f)
         target_data = np.load(target_f)
 
-        input_data = utils.take_smaller_patch(input_data)
-        target_data = utils.take_smaller_patch(target_data)
-
         input_data = torch.from_numpy(input_data)
         target_data = torch.from_numpy(target_data)
 

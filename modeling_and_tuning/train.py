@@ -27,34 +27,30 @@ def train_single_epoch(model, loader, optimizer, criterion):
 
 
 if __name__ == "__main__":
-    in_channels = 5
-    out_channels = 3
-    mo = UNet(in_channels=in_channels, out_channels=out_channels).to(device)
+    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS).to(device)
 
     dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
-    dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
-    opt = Adam(mo.parameters(), lr=0.02, betas=(0.5, 0.999))
-    crt = nn.CrossEntropyLoss() if out_channels > 1 else nn.BCEWithLogitsLoss()
+    dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
+    opt = Adam(mo.parameters(), lr=const.LEARNING_RATE, betas=const.ADAM_BETAS)
+    crt = nn.CrossEntropyLoss() if const.OUTPUT_CHANNELS > 1 else nn.BCEWithLogitsLoss()
 
-    # for epoch in range(2):
+    # for epoch in range(50):
     #     train_single_epoch(mo, dataloader, opt, crt)
 
-    # inp, tgt = tuple(next(iter(dataloader)))
-    # inp = inp.detach().numpy().squeeze()
-    # tgt = tgt.detach().numpy().squeeze()
-    # iCh, iH, iW = inp.shape
-    # tCh, tH, tW = tgt.shape
-    #
-    # inp = np.reshape(inp, (iH, iW, iCh))
-    # tgt = np.reshape(tgt, (tH, tW, tCh))
-    #
-    # utils.display_image(inp)
-    # utils.display_image(tgt)
-    #
-    # inp = torch.from_numpy(np.reshape(inp, (iCh, iH, iW)))
-    # inp = torch.unsqueeze(inp, 0).to(device="cuda")
-    # result = mo(inp)
-    # print(result.shape)
-    # result = result.detach().cpu().numpy().squeeze()
-    # result = np.reshape(result, (tCh, tH, tW))
-    # utils.display_image(result)
+    with torch.no_grad():
+        inp, tgt = tuple(next(iter(dataloader)))
+        inp_to_display = inp.numpy()[0]
+        tgt = tgt.numpy()[0]
+        iCh, iH, iW = inp_to_display.shape
+        tCh, tH, tW = tgt.shape
+
+        inp_to_display = np.reshape(inp_to_display, (iH, iW, iCh))
+        tgt = np.reshape(tgt, (tH, tW, tCh))
+
+        result = mo(inp.cuda())
+        result = result.cpu().numpy()[0]
+        result = np.reshape(result, (tCh, tH, tW))
+
+        utils.display_image(inp_to_display)
+        utils.display_image(tgt)
+        utils.display_image(result)
