@@ -9,7 +9,7 @@ TARGET_DATA_DIR = os.path.join(DATA_DIR, "targets")
 
 IMG_ID_REGEX = "[0-9]{6}-[1-6]-[0-9]{4}"
 
-PIECE_SHAPE = (256, 256)  # multiples of 64 if UnetV3
+PIECE_SHAPE = (64, 64)  # multiples of 64 if UnetV3
 PIECE_ID_REGEX = f"{IMG_ID_REGEX}_[0-9]+\D"
 PIECES_READY_DATA_DIR = os.path.join(DATA_DIR, "ready")
 PIECES_READY_DATA_INPUTS_DIR = os.path.join(PIECES_READY_DATA_DIR, "inputs")
