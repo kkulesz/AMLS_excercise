@@ -28,7 +28,6 @@ def split_into_smaller_pieces(files, is_target, directory):
             path = os.path.join(directory, piece_file_name)
             np.save(path, piece, allow_pickle=True)
 
-
 if __name__ == "__main__":
     utils.create_dir_if_doesnt_exist(const.PIECES_READY_DATA_DIR)
     utils.create_dir_if_doesnt_exist(const.PIECES_READY_DATA_INPUTS_DIR)
@@ -36,7 +35,7 @@ if __name__ == "__main__":
 
     input_files = utils.listdir_fullpath(const.ALIGNED_DATA_DIR)
     target_files = utils.listdir_fullpath(const.TARGET_DATA_DIR)
-    target_files = filter(lambda f: "target" in f, target_files)
+    target_files = list(filter(lambda f: "target" in f, target_files))
 
     split_into_smaller_pieces(input_files, is_target=False, directory=const.PIECES_READY_DATA_INPUTS_DIR)
     split_into_smaller_pieces(target_files, is_target=True, directory=const.PIECES_READY_DATA_TARGETS_DIR)
