@@ -2,6 +2,7 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam
 import torch.nn as nn
 import torch
+import numpy as np
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
@@ -29,13 +30,31 @@ if __name__ == "__main__":
     in_channels = 5
     out_channels = 3
     mo = UNet(in_channels=in_channels, out_channels=out_channels).to(device)
-    # test = torch.randn(1, 5, 2048, 1489).to("cuda")
-    # mo(test)
 
-    dataset = SdssDataset(const.ALIGNED_DATA_DIR, const.TARGET_DATA_DIR)
+    dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True)
-    opt = Adam(mo.parameters(), lr=0.0002, betas=(0.5, 0.999))
+    opt = Adam(mo.parameters(), lr=0.02, betas=(0.5, 0.999))
     crt = nn.CrossEntropyLoss() if out_channels > 1 else nn.BCEWithLogitsLoss()
 
-    for epoch in range(10):
-        train_single_epoch(mo, dataloader, opt, crt)
+    # for epoch in range(2):
+    #     train_single_epoch(mo, dataloader, opt, crt)
+
+    # inp, tgt = tuple(next(iter(dataloader)))
+    # inp = inp.detach().numpy().squeeze()
+    # tgt = tgt.detach().numpy().squeeze()
+    # iCh, iH, iW = inp.shape
+    # tCh, tH, tW = tgt.shape
+    #
+    # inp = np.reshape(inp, (iH, iW, iCh))
+    # tgt = np.reshape(tgt, (tH, tW, tCh))
+    #
+    # utils.display_image(inp)
+    # utils.display_image(tgt)
+    #
+    # inp = torch.from_numpy(np.reshape(inp, (iCh, iH, iW)))
+    # inp = torch.unsqueeze(inp, 0).to(device="cuda")
+    # result = mo(inp)
+    # print(result.shape)
+    # result = result.detach().cpu().numpy().squeeze()
+    # result = np.reshape(result, (tCh, tH, tW))
+    # utils.display_image(result)
