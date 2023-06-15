@@ -6,6 +6,8 @@ import numpy as np
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
+from models.unet_v2 import UNetV2
+from models.unet_v3 import UnetV3
 import utils
 import const
 
@@ -27,7 +29,9 @@ def train_single_epoch(model, loader, optimizer, criterion):
 
 
 if __name__ == "__main__":
-    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS).to(device)
+    # mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS).to(device)
+    # mo = UNetV2().to(device)
+    mo = UnetV3().to(device)
 
     dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
     dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
