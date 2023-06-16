@@ -6,9 +6,6 @@ import numpy as np
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
-from models.unet_v2 import UNetV2
-from models.unet_v3 import UnetV3
-from models.unet_v4 import UNetV4
 import utils
 import const
 
@@ -30,17 +27,14 @@ def train_single_epoch(model, loader, optimizer, criterion):
 
 
 if __name__ == "__main__":
-    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS).to(device)
-    # mo = UNetV2().to(device)
-    # mo = UnetV3().to(device)
-    # mo = UNetV4(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=True).to(device)
+    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=True).to(device)
 
     dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
     dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
     opt = Adam(mo.parameters(), lr=const.LEARNING_RATE, betas=const.ADAM_BETAS)
     crt = nn.CrossEntropyLoss() if const.OUTPUT_CHANNELS > 1 else nn.BCEWithLogitsLoss()
 
-    for epoch in range(50):
+    for epoch in range(const.NUMBER_OF_EPOCHS):
         print(epoch)
         train_single_epoch(mo, dataloader, opt, crt)
 
