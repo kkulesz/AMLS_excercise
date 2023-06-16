@@ -11,3 +11,7 @@ Architecture of Machine Learning Systems
 
 
 Bonus: `other/delete_files.py` to delete compressed files if they are no longer needed
+
+2. Data preparation
+- `split_into_smaller_pieces.py` -  splits each image into pieces and stores them in `data/ready/[targets/inputs]`
+- `split_data.py` - TODO

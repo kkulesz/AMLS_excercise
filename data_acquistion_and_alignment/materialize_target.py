@@ -12,8 +12,8 @@ def color_pixels(img, df_of_pixels, channel):
     for _, coords in df_of_pixels.iterrows():
         x = int(coords[0])
         y = int(coords[1])
-        img[y - ps:y + ps, x - ps:x + ps, 2] = 0
-        img[y - ps:y + ps, x - ps:x + ps, channel] = 255
+        img[y - ps:y + ps, x - ps:x + ps, 2] = 0.
+        img[y - ps:y + ps, x - ps:x + ps, channel] = 1.
     return img
 
 
@@ -25,7 +25,7 @@ def materialize_target(img_numpy_file, gal_csv, star_csv):
     rows, cols, _ = img.shape
 
     target_image = np.empty((rows, cols, 3))
-    target_image[:, :, 2] = np.full((rows, cols), 255)
+    target_image[:, :, 2] = np.full((rows, cols), 1.)
 
     target_image = color_pixels(target_image, gal_df, channel=0)
     target_image = color_pixels(target_image, star_df, channel=1)

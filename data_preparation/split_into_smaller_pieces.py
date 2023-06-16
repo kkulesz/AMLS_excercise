@@ -29,7 +29,6 @@ def reconstruct_into_whole_image(pieces):
     rows = []
     for col in cols:
         rows.append(np.concatenate(col, axis=1))
-    print(rows[0].shape)
     return np.concatenate(rows, axis=0)
 
 
