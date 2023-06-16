@@ -2,10 +2,10 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam
 import torch.nn as nn
 import torch
-import numpy as np
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
+from manual_validate import validate_model
 import utils
 import const
 
@@ -16,7 +16,6 @@ def train_single_epoch(model, loader, optimizer, criterion):
     for i, (input_tensor, target_tensor) in enumerate(loader):
         input_tensor = input_tensor.to(device)
         target_tensor = target_tensor.to(device)
-
         prediction_tensor = model(input_tensor)
 
         loss = criterion(prediction_tensor, target_tensor)
@@ -27,7 +26,7 @@ def train_single_epoch(model, loader, optimizer, criterion):
 
 
 if __name__ == "__main__":
-    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=True).to(device)
+    mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=const.BILINEAR).to(device)
 
     dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
     dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
@@ -35,23 +34,7 @@ if __name__ == "__main__":
     crt = nn.CrossEntropyLoss() if const.OUTPUT_CHANNELS > 1 else nn.BCEWithLogitsLoss()
 
     for epoch in range(const.NUMBER_OF_EPOCHS):
-        print(epoch)
+        print(f"epoch={epoch}")
         train_single_epoch(mo, dataloader, opt, crt)
-
-    with torch.no_grad():
-        inp, tgt = tuple(next(iter(dataloader)))
-        inp_to_display = inp.numpy()[0]
-        tgt = tgt.numpy()[0]
-        iCh, iH, iW = inp_to_display.shape
-        tCh, tH, tW = tgt.shape
-
-        inp_to_display = np.reshape(inp_to_display, (iH, iW, iCh))
-        tgt = np.reshape(tgt, (tH, tW, tCh))
-
-        result = mo(inp.cuda())
-        result = result.cpu().numpy()[0]
-        result = np.reshape(result, (tH, tW, tCh))
-
-        utils.display_image(inp_to_display)
-        utils.display_image(tgt)
-        utils.display_image(result)
+    torch.save(mo.state_dict(), "model.pt")
+    validate_model(model=mo)
