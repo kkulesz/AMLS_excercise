@@ -12,7 +12,7 @@ from models.unet import UNet
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
 
-def validate_model_whole_picture(
+def validate_model_manual(
         model: nn.Module,
         img_size: int = None,
         input_path: str = const.VALIDATE_INPUT_PATH,
@@ -57,43 +57,9 @@ def validate_model_whole_picture(
         # utils.display_image(filtered)
 
 
-def validate_model_single_piece(
-        model: nn.Module,
-        input_path: str = const.VALIDATE_INPUT_PATH,
-        target_path: str = const.VALIDATE_TARGET_PATH
-):
-    with torch.no_grad():
-        raw_input = np.load(input_path)
-        target_img = np.load(target_path)
-
-        input_pieces = utils.split_into_smaller_pieces(raw_input)
-        target_pieces = utils.split_into_smaller_pieces(target_img)
-
-        random_index = random.randint(0, len(input_pieces))
-        print(random_index)
-        raw_piece = input_pieces[random_index]
-        raw_target_piece = target_pieces[random_index]
-
-        pH, pW, pCh = raw_piece.shape
-        piece = np.reshape(raw_piece, (pCh, pH, pW))
-        piece = torch.from_numpy(piece)
-        piece = torch.unsqueeze(piece, 0)
-
-        result = model(piece.cuda())
-
-        result = torch.squeeze(result)
-        result = result.cpu().numpy()
-        rCh, rH, rW = result.shape
-        result = np.reshape(result, (rH, rW, rCh))
-
-        utils.display_image(raw_piece)
-        utils.display_image(raw_target_piece)
-        utils.display_image(result)
-
-
 if __name__ == "__main__":
     model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    model.load_state_dict(torch.load("../models_storage/model-150epochs-without.pt"))
+    model.load_state_dict(torch.load("model.pt"))
     model.to(utils.get_device())
 
-    validate_model_whole_picture(model, img_size=200)
+    validate_model_manual(model, img_size=200)
