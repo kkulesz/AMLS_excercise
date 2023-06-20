@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import os
 import cv2
+import random
 
 import utils
 import const
@@ -11,8 +12,9 @@ from models.unet import UNet
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
 
-def validate_model(
+def validate_model_whole_picture(
         model: nn.Module,
+        img_size: int = None,
         input_path: str = const.VALIDATE_INPUT_PATH,
         target_path: str = const.VALIDATE_TARGET_PATH
 ):
@@ -20,6 +22,11 @@ def validate_model(
         raw_input = np.load(input_path)
         target_img = np.load(target_path)
 
+        if img_size:
+            raw_input = raw_input[0:img_size, 0:img_size, :]
+            target_img = target_img[0:img_size, 0:img_size, :]
+
+        img_H, img_W, _ = raw_input.shape
         pieces = utils.split_into_smaller_pieces(raw_input)
         pH, pW, pCh = pieces[0].shape
         pieces_transformed = []
@@ -41,7 +48,7 @@ def validate_model(
             b_result = np.reshape(b_result, (rB, rH, rW, rCh))
             results.append(b_result)
         result = np.concatenate(results, axis=0)
-        result = utils.reconstruct_into_whole_image(result)
+        result = utils.reconstruct_into_whole_image(result, img_H, img_W)
         # filtered = filter_image(result)
 
         utils.display_image(raw_input)
@@ -50,32 +57,43 @@ def validate_model(
         # utils.display_image(filtered)
 
 
-# def filter_func(red, green, blue):
-#     nRed, nGreen, nBlue = None, None, None
-#     if red > const.THRESHOLD_VALUE:
-#         nRed = 1.
-#         nBlue = 0.
-#     if green > const.THRESHOLD_VALUE:
-#         nGreen = 1.
-#         nBlue = 0.
-#
-#     if nBlue == 0:
-#         nBlue = 1.
-#
-#     return np.array((nRed, nGreen, nBlue))
-#
-#
-# def filter_image(img):
-#     bla = np.zeros(img.shape)
-#     for a in range(img.shape[0]):
-#         for b in range(img.shape[1]):
-#             bla[a, b] = filter_func(*img[a, b])
-#     return bla
+def validate_model_single_piece(
+        model: nn.Module,
+        input_path: str = const.VALIDATE_INPUT_PATH,
+        target_path: str = const.VALIDATE_TARGET_PATH
+):
+    with torch.no_grad():
+        raw_input = np.load(input_path)
+        target_img = np.load(target_path)
+
+        input_pieces = utils.split_into_smaller_pieces(raw_input)
+        target_pieces = utils.split_into_smaller_pieces(target_img)
+
+        random_index = random.randint(0, len(input_pieces))
+        print(random_index)
+        raw_piece = input_pieces[random_index]
+        raw_target_piece = target_pieces[random_index]
+
+        pH, pW, pCh = raw_piece.shape
+        piece = np.reshape(raw_piece, (pCh, pH, pW))
+        piece = torch.from_numpy(piece)
+        piece = torch.unsqueeze(piece, 0)
+
+        result = model(piece.cuda())
+
+        result = torch.squeeze(result)
+        result = result.cpu().numpy()
+        rCh, rH, rW = result.shape
+        result = np.reshape(result, (rH, rW, rCh))
+
+        utils.display_image(raw_piece)
+        utils.display_image(raw_target_piece)
+        utils.display_image(result)
 
 
 if __name__ == "__main__":
     model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    model.load_state_dict(torch.load("model-100epochs-all-data.pt"))
+    model.load_state_dict(torch.load("../models_storage/model-150epochs-without.pt"))
     model.to(utils.get_device())
 
-    validate_model(model)
+    validate_model_whole_picture(model, img_size=200)

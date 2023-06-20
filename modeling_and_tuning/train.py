@@ -2,10 +2,10 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam
 import torch.nn as nn
 import torch
+import wandb
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
-from manual_validate import validate_model
 import utils
 import const
 
@@ -26,6 +26,7 @@ def train_single_epoch(model, loader, optimizer, criterion):
 
 
 if __name__ == "__main__":
+    model_name = "model-1000epochs-without-validate.pt"
     mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=const.BILINEAR).to(device)
 
     dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
@@ -34,7 +35,9 @@ if __name__ == "__main__":
     crt = nn.CrossEntropyLoss() if const.OUTPUT_CHANNELS > 1 else nn.BCEWithLogitsLoss()
 
     for epoch in range(const.NUMBER_OF_EPOCHS):
-        print(f"epoch={epoch}")
+        print(f"epoch={epoch+1}")
         train_single_epoch(mo, dataloader, opt, crt)
-    torch.save(mo.state_dict(), "model-1000epochs-without-validate.pt")
-    validate_model(model=mo)
+        if (epoch + 1) % 50 == 0:
+            print("Saving model...")
+            torch.save(mo.state_dict(), "../models_storage/model-150epochs-without.pt")
+    torch.save(mo.state_dict(), model_name)
