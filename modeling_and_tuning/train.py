@@ -36,5 +36,5 @@ if __name__ == "__main__":
     for epoch in range(const.NUMBER_OF_EPOCHS):
         print(f"epoch={epoch}")
         train_single_epoch(mo, dataloader, opt, crt)
-    torch.save(mo.state_dict(), "model.pt")
+    torch.save(mo.state_dict(), "model-1000epochs-without-validate.pt")
     validate_model(model=mo)

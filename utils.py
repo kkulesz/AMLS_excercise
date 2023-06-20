@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 
+import const
+
 
 def listdir_fullpath(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory)]
@@ -30,3 +32,28 @@ def get_device():
 
     return device
 
+
+def _get_multiple_without_reminder(N, divider):
+    reminder = N % divider
+    return N - reminder
+
+
+def split_into_smaller_pieces(img):
+    H, W, _ = img.shape
+    nH, nW = const.PIECE_SHAPE
+    mH = _get_multiple_without_reminder(H, nH)
+    mW = _get_multiple_without_reminder(W, nW)
+    return [img[x:x + nH, y:y + nW] for x in range(0, mH, nH) for y in range(0, mW, nW)]
+
+
+def reconstruct_into_whole_image(pieces):
+    H, W = const.ORIGINAL_IMAGE_SHAPE
+    nH, nW = const.PIECE_SHAPE
+    mW = _get_multiple_without_reminder(W, nW)
+    pieces_per_row = int(mW / nW)
+
+    cols = [pieces[i:i + pieces_per_row] for i in range(0, len(pieces), pieces_per_row)]
+    rows = []
+    for col in cols:
+        rows.append(np.concatenate(col, axis=1))
+    return np.concatenate(rows, axis=0)

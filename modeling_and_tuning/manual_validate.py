@@ -2,11 +2,11 @@ import torch.nn as nn
 import torch
 import numpy as np
 import os
+import cv2
 
 import utils
 import const
 from models.unet import UNet
-from data_preparation.split_into_smaller_pieces import reconstruct_into_whole_image, split_into_smaller_pieces
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
@@ -20,7 +20,7 @@ def validate_model(
         raw_input = np.load(input_path)
         target_img = np.load(target_path)
 
-        pieces = split_into_smaller_pieces(raw_input)
+        pieces = utils.split_into_smaller_pieces(raw_input)
         pH, pW, pCh = pieces[0].shape
         pieces_transformed = []
         for piece in pieces:
@@ -31,7 +31,7 @@ def validate_model(
 
         batches = []
         for i in range(0, len(input_tensor), const.BATCH_SIZE):
-            batches.append(input_tensor[i: min(i+const.BATCH_SIZE, len(input_tensor))])
+            batches.append(input_tensor[i: min(i + const.BATCH_SIZE, len(input_tensor))])
 
         results = []
         for batch in batches:
@@ -41,16 +41,41 @@ def validate_model(
             b_result = np.reshape(b_result, (rB, rH, rW, rCh))
             results.append(b_result)
         result = np.concatenate(results, axis=0)
-        result = reconstruct_into_whole_image(result)
+        result = utils.reconstruct_into_whole_image(result)
+        # filtered = filter_image(result)
 
         utils.display_image(raw_input)
         utils.display_image(target_img)
         utils.display_image(result)
+        # utils.display_image(filtered)
+
+
+# def filter_func(red, green, blue):
+#     nRed, nGreen, nBlue = None, None, None
+#     if red > const.THRESHOLD_VALUE:
+#         nRed = 1.
+#         nBlue = 0.
+#     if green > const.THRESHOLD_VALUE:
+#         nGreen = 1.
+#         nBlue = 0.
+#
+#     if nBlue == 0:
+#         nBlue = 1.
+#
+#     return np.array((nRed, nGreen, nBlue))
+#
+#
+# def filter_image(img):
+#     bla = np.zeros(img.shape)
+#     for a in range(img.shape[0]):
+#         for b in range(img.shape[1]):
+#             bla[a, b] = filter_func(*img[a, b])
+#     return bla
 
 
 if __name__ == "__main__":
     model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    model.load_state_dict(torch.load("model.pt"))
+    model.load_state_dict(torch.load("model-100epochs-all-data.pt"))
     model.to(utils.get_device())
 
     validate_model(model)
