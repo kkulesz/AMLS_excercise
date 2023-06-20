@@ -4,4 +4,5 @@ numpy==1.24.3
 opencv_python==4.7.0.72
 pandas==2.0.2
 torch==2.0.1+cu117
+wandb==0.15.4
 wget==3.2
