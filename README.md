@@ -6,7 +6,7 @@ Architecture of Machine Learning Systems
 - `download_data.py` - remember to change numbers!
 - `decompress data.py`
 - `align_data.py` - aligns data and saves it into `data/aligned` folder
-- `process_coords.py` - takes coords fits files and r band from `data/aligned` folder -> maps one into another -> saves result in `data/coords/*.csv` files
+- `process_coords.py` - takes coords fits files and r band from `data/aligned` folder -> maps one into another -> saves result in `data/coords/*.csv` files. THIS TAKES SIGNIFICANT AMOUNT OF TIME.
 - `materialize_target.py` - takes `data/aligned` and `data/coords` folders -> creates two images: target and marked -> saves them into `data/targets` folder
 
 

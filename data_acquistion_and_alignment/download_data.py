@@ -54,6 +54,7 @@ if __name__ == "__main__":
     #   and so on...
     urls_meta_numbers = [
         # (8162, 80, 80, 6, 6, False),  # 6th (8162, 80, 237); for the sake of comparison - 301/8162/6/frame-irg-008162-6-0080
+        # (8162, 81, 85, 6, 6, True),  # 6th (8162, 80, 237); my own selection, similar to test
         # (8110, 11, 15, 1, 1, False),  # (8110, 11, 225); my own selection
         # (3918, 213, 213, 3, 3, True),  # 3th (3918, 28, 434); used in repo
     ]
@@ -68,7 +69,7 @@ if __name__ == "__main__":
                     download_or_log_on_fail(url, data_dir)
                 print(f"Cords downloaded: {run_num}:{camera_col}")
             else:
-                print(f"Skipping down loading cords: {run_num}:{camera_col}")
+                print(f"Skipping downloading cords: {run_num}:{camera_col}")
 
             for seq_num in range(min_seq, max_seq + 1):
                 # download various bands of single image
@@ -76,9 +77,9 @@ if __name__ == "__main__":
                     url = build_data_url(run_num, band, camera_col, seq_num, "fits.bz2")
                     download_or_log_on_fail(url, data_dir)
                 print(f"\tBands downloaded: {run_num}:{seq_num}:{camera_col}")
-
-                # download irg jpgs
-                for img_type in ["irg", "thumb-irg"]:  # less than 1MB combined, negligible,
-                    url = build_data_url(run_num, img_type, camera_col, seq_num, "jpg")
-                    download_or_log_on_fail(url, data_dir)
-                print(f"\tIRGs downloaded: {run_num}:{seq_num}:{camera_col}")
+                #
+                # # download irg jpgs
+                # for img_type in ["irg", "thumb-irg"]:  # less than 1MB combined, negligible,
+                #     url = build_data_url(run_num, img_type, camera_col, seq_num, "jpg")
+                #     download_or_log_on_fail(url, data_dir)
+                # print(f"\tIRGs downloaded: {run_num}:{seq_num}:{camera_col}")
