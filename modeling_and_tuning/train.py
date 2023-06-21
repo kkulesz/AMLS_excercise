@@ -3,6 +3,7 @@ from torch.optim import Adam
 import torch.nn as nn
 import torch
 import wandb
+import os
 
 from data_preparation.dataset import SdssDataset
 from models.unet import UNet
@@ -33,10 +34,13 @@ if __name__ == "__main__":
     wandb.login()
     wandb.init(project="AMLS", entity="luizz")
 
+    inputs_dir = os.path.join(const.TRAIN_DIR, const.PIECE_DIR_INPUT_NAME)
+    targets_dir = os.path.join(const.TRAIN_DIR, const.PIECE_DIR_TARGET_NAME)
+
     model_name = "model.pt"
     mo = UNet(in_channels=const.INPUT_CHANNELS, out_channels=const.OUTPUT_CHANNELS, bilinear=const.BILINEAR).to(device)
 
-    dataset = SdssDataset(const.PIECES_READY_DATA_INPUTS_DIR, const.PIECES_READY_DATA_TARGETS_DIR)
+    dataset = SdssDataset(inputs_dir, targets_dir)
     dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
     opt = Adam(mo.parameters(), lr=const.LEARNING_RATE, betas=const.ADAM_BETAS)
 
@@ -48,5 +52,5 @@ if __name__ == "__main__":
         train_single_epoch(mo, dataloader, opt, crt)
         if (epoch + 1) % const.SAVE_MODEL_INTERVAL == 0:
             print("Saving model...")
-            torch.save(mo.state_dict(), f"{model_name}-checkpoint-epoch={epoch+1}")
+            torch.save(mo.state_dict(), f"{model_name}-checkpoint-epoch={epoch + 1}")
     torch.save(mo.state_dict(), model_name)
