@@ -7,6 +7,7 @@ TODO:
 """
 import re
 import pandas as pd
+import shutil
 
 import utils
 import const
@@ -115,6 +116,11 @@ def split_data(images_with_counts, images_to_assign_to_test):
     return validation_set, train_set, test_set
 
 
+def copy_files_into_destination_dir(files, dest_dir):
+    for file in files:
+        shutil.copy(file, dest_dir)
+
+
 if __name__ == "__main__":
     utils.create_dir_if_doesnt_exist(const.SPLITTED_DATA_DIR)
     utils.create_dir_if_doesnt_exist(const.TEST_DIR)
@@ -126,6 +132,7 @@ if __name__ == "__main__":
     )
 
     validation_set, train_set, test_set = split_data(images_with_counts, const.IMAGES_TO_ASSIGN_TO_TEST_SET)
-    print(len(validation_set))
-    print(len(train_set))
-    print(len(test_set))
+
+    copy_files_into_destination_dir(validation_set, const.VALIDATION_DIR)
+    copy_files_into_destination_dir(train_set, const.TRAIN_DIR)
+    copy_files_into_destination_dir(test_set, const.TEST_DIR)

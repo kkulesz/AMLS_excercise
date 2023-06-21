@@ -10,11 +10,10 @@ TARGET_DATA_DIR = os.path.join(DATA_DIR, "targets")
 IMG_ID_REGEX = "[0-9]{6}-[1-6]-[0-9]{4}"
 
 ORIGINAL_IMAGE_SHAPE = (1489, 2048)
-PIECE_SHAPE = (128, 128)  # multiples of 64 if UnetV3
+PIECE_SHAPE = (512, 512)  # multiples of 64 if UnetV3
 PIECE_ID_REGEX = f"{IMG_ID_REGEX}_[0-9]+\D"
-PIECES_READY_DATA_DIR = os.path.join(DATA_DIR, "ready")
-PIECES_READY_DATA_INPUTS_DIR = os.path.join(PIECES_READY_DATA_DIR, "inputs")
-PIECES_READY_DATA_TARGETS_DIR = os.path.join(PIECES_READY_DATA_DIR, "targets")
+PIECE_DIR_INPUT_NAME = "input_pieces"
+PIECE_DIR_TARGET_NAME = "target_pieces"
 
 VALIDATE_IMG = "008162-6-0080"
 VALIDATE_DIR = os.path.join(DATA_DIR, "to_validate")

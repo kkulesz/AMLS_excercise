@@ -17,7 +17,7 @@ def color_pixels(img, df_of_pixels, channel):
     return img
 
 
-def materialize_target(img_numpy_file, gal_csv, star_csv):
+def materialize_target(img_numpy_file, gal_csv, star_csv, target_dir):
     img = np.load(img_numpy_file)
     gal_df = pd.read_csv(gal_csv, skiprows=0)
     star_df = pd.read_csv(star_csv, skiprows=0)
@@ -38,20 +38,21 @@ def materialize_target(img_numpy_file, gal_csv, star_csv):
     # utils.display_image(marked_image)
 
     img_id = re.search(const.IMG_ID_REGEX, img_numpy_file).group()
-    target_path = os.path.join(const.TARGET_DATA_DIR, f"{img_id}_target")
-    marked_path = os.path.join(const.TARGET_DATA_DIR, f"{img_id}_marked")
+    target_path = os.path.join(target_dir, f"{img_id}_target")
+    marked_path = os.path.join(target_dir, f"{img_id}_marked")
     np.save(target_path, target_image, allow_pickle=True)
     np.save(marked_path, marked_image, allow_pickle=True)
 
 
-if __name__ == "__main__":
-    utils.create_dir_if_doesnt_exist(const.TARGET_DATA_DIR)
+def materialize_target_for_directory(data_dir, target_data_dir, coords_dir):
+    utils.create_dir_if_doesnt_exist(target_data_dir)
 
-    coords_files = utils.listdir_fullpath(const.COORDS_DATA_DIR)
+    coords_files = utils.listdir_fullpath(coords_dir)
     gals_files = list(filter(lambda f: re.search("gal", f), coords_files))
     stars_files = list(filter(lambda f: re.search("star", f), coords_files))
 
-    image_files = utils.listdir_fullpath(const.ALIGNED_DATA_DIR)
+    image_files = utils.listdir_fullpath(data_dir)
+    image_files = list(filter(lambda f: re.search(const.IMG_ID_REGEX, f), image_files))
 
     img_gal_star_files_tuples = []
     for img_f in image_files:
@@ -64,4 +65,12 @@ if __name__ == "__main__":
         )
 
     for (img, gal, star) in img_gal_star_files_tuples:
-        materialize_target(img, gal, star)
+        materialize_target(img, gal, star, target_data_dir)
+
+
+if __name__ == "__main__":
+    target_name = "target"
+    materialize_target_for_directory(const.TRAIN_DIR, os.path.join(const.TRAIN_DIR, target_name), const.COORDS_DATA_DIR)
+    materialize_target_for_directory(const.TEST_DIR, os.path.join(const.TEST_DIR, target_name), const.COORDS_DATA_DIR)
+    materialize_target_for_directory(const.VALIDATION_DIR, os.path.join(const.VALIDATION_DIR, target_name), const.COORDS_DATA_DIR)
+
