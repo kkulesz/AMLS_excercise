@@ -31,7 +31,7 @@ def split_images_in_directory(data_directory, target_directory):
     target_pieces_dir = os.path.join(data_directory, const.PIECE_DIR_TARGET_NAME)
 
     split_files_and_save(input_files, input_pieces_dir, is_target=False)
-    split_files_and_save(target_files, target_pieces_dir, is_target=False)
+    split_files_and_save(target_files, target_pieces_dir, is_target=True)
 
 
 if __name__ == "__main__":
