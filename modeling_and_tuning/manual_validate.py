@@ -14,7 +14,7 @@ os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
 def validate_model_manual(
         model: nn.Module,
-        img_size: int = None,
+        img_size: (int, int) = None,
         input_path: str = const.VALIDATE_INPUT_PATH,
         target_path: str = const.VALIDATE_TARGET_PATH
 ):
@@ -23,8 +23,12 @@ def validate_model_manual(
         target_img = np.load(target_path)
 
         if img_size:
-            raw_input = raw_input[0:img_size, 0:img_size, :]
-            target_img = target_img[0:img_size, 0:img_size, :]
+            piece_H, piece_W = img_size
+            org_H, org_W, _ = raw_input.shape
+            start_h = random.randint(0, org_H - piece_H)
+            start_w = random.randint(0, org_W - piece_W)
+            raw_input = raw_input[start_h:start_h + piece_H, start_w:start_w + piece_W, :]
+            target_img = target_img[start_h:start_h + piece_H, start_w:start_w + piece_W, :]
 
         img_H, img_W, _ = raw_input.shape
         pieces = utils.split_into_smaller_pieces(raw_input)
@@ -62,4 +66,4 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load("model.pt"))
     model.to(utils.get_device())
 
-    validate_model_manual(model, img_size=200)
+    validate_model_manual(model, img_size=const.PIECE_SHAPE)
