@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
+import random
 
 import const
 
@@ -31,6 +32,18 @@ def get_device():
     print(f"Working on {device} device.")
 
     return device
+
+
+def seed_torch(seed=2137):
+    #  taken from: https://github.com/pytorch/pytorch/issues/7068
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)  # if you are using multi-GPU.
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
 
 
 def _get_multiple_without_reminder(N, divider):
