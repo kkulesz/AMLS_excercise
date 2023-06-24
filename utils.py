@@ -70,3 +70,8 @@ def reconstruct_into_whole_image(pieces, org_H, org_W):
     for col in cols:
         rows.append(np.concatenate(col, axis=1))
     return np.concatenate(rows, axis=0)
+
+
+def clip_target_to_output_shape(target, result):
+    rH, rW, _ = result.shape
+    return target[0:rH, 0:rW, :]

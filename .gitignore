@@ -5,6 +5,7 @@ from_example_provided/*.pdf
 from_example_provided/*.bz2
 models_storage/
 modeling_and_tuning/wandb/
+validation_outputs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
