@@ -4,7 +4,6 @@ import torch.nn.functional as F
 
 
 class ConvBlock(nn.Module):
-
     def __init__(self, in_channels, out_channels, mid_channels=None):
         super().__init__()
         if not mid_channels:
@@ -60,7 +59,7 @@ class DecoderBlock(nn.Module):
 
 
 class UNet(nn.Module):
-    def __init__(self, in_channels, out_channels, bilinear):
+    def __init__(self, in_channels, out_channels, bilinear=False):
         super().__init__()
 
         self.conv = ConvBlock(in_channels, 64)

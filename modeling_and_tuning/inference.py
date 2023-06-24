@@ -8,11 +8,12 @@ import random
 import utils
 import const
 from models.unet import UNet
+from models.unet_v2 import UNetV2
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
 
-def validate_model_manual(
+def inference(
         model: nn.Module,
         img_size: (int, int) = None,
         input_path: str = const.VALIDATE_INPUT_PATH,
@@ -62,8 +63,11 @@ def validate_model_manual(
 
 
 if __name__ == "__main__":
-    model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    model.load_state_dict(torch.load("model.pt"))
+    # model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
+    model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
+
+    model.load_state_dict(torch.load("model-checkpoint-epoch=25.pt"))
     model.to(utils.get_device())
 
-    validate_model_manual(model, img_size=const.PIECE_SHAPE)
+    # validate_model_manual(model, img_size=const.PIECE_SHAPE)
+    inference(model)
