@@ -1,10 +1,3 @@
-"""
-TODO:
-    split the data into train/validation/test sets of similar
-    data distributions (e.g., label distribution and potentially other properties such
-    as visual similarity or data provenance)
-
-"""
 import re
 import pandas as pd
 import shutil
@@ -121,11 +114,21 @@ def copy_files_into_destination_dir(files, dest_dir):
         shutil.copy(file, dest_dir)
 
 
-if __name__ == "__main__":
+def _prepare_dirs():
+    # creating '/splitted'
     utils.create_dir_if_doesnt_exist(const.SPLITTED_DATA_DIR)
+    # creating '/splitted/[test/train/validation]'
     utils.create_dir_if_doesnt_exist(const.TEST_DIR)
     utils.create_dir_if_doesnt_exist(const.TRAIN_DIR)
     utils.create_dir_if_doesnt_exist(const.VALIDATION_DIR)
+    # creating '/splitted/[test/train/validation]/inputs'
+    utils.create_dir_if_doesnt_exist(const.TEST_INPUTS_DIR)
+    utils.create_dir_if_doesnt_exist(const.TRAIN_INPUTS_DIR)
+    utils.create_dir_if_doesnt_exist(const.VALIDATION_INPUTS_DIR)
+
+
+if __name__ == "__main__":
+    _prepare_dirs()
 
     images_with_counts = get_images_with_gal_and_star_count(
         const.ALIGNED_DATA_DIR, const.COORDS_DATA_DIR
@@ -133,6 +136,6 @@ if __name__ == "__main__":
 
     validation_set, train_set, test_set = split_data(images_with_counts, const.IMAGES_TO_ASSIGN_TO_TEST_SET)
 
-    copy_files_into_destination_dir(validation_set, const.VALIDATION_DIR)
-    copy_files_into_destination_dir(train_set, const.TRAIN_DIR)
-    copy_files_into_destination_dir(test_set, const.TEST_DIR)
+    copy_files_into_destination_dir(test_set, const.TEST_INPUTS_DIR)
+    copy_files_into_destination_dir(train_set, const.TRAIN_INPUTS_DIR)
+    copy_files_into_destination_dir(validation_set, const.VALIDATION_INPUTS_DIR)

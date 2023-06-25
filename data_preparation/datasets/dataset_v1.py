@@ -1,3 +1,4 @@
+import pandas as pd
 from torch.utils.data import Dataset
 import re
 import numpy as np
@@ -7,7 +8,7 @@ import utils
 import const
 
 
-class SdssDataset(Dataset):
+class SdssDatasetV1(Dataset):
     def __init__(self, input_dir, target_dir):
         input_list = utils.listdir_fullpath(input_dir)
         target_list = utils.listdir_fullpath(target_dir)

@@ -69,8 +69,9 @@ def materialize_target_for_directory(data_dir, target_data_dir, coords_dir):
 
 
 if __name__ == "__main__":
-    target_name = "target"
-    materialize_target_for_directory(const.TRAIN_DIR, os.path.join(const.TRAIN_DIR, target_name), const.COORDS_DATA_DIR)
-    materialize_target_for_directory(const.TEST_DIR, os.path.join(const.TEST_DIR, target_name), const.COORDS_DATA_DIR)
-    materialize_target_for_directory(const.VALIDATION_DIR, os.path.join(const.VALIDATION_DIR, target_name), const.COORDS_DATA_DIR)
-
+    materialize_target_for_directory(const.TRAIN_INPUTS_DIR, const.TRAIN_TARGETS_DIR, const.COORDS_DATA_DIR)
+    print("Train done...")
+    materialize_target_for_directory(const.TEST_INPUTS_DIR, const.TEST_TARGETS_DIR, const.COORDS_DATA_DIR)
+    print("Test done...")
+    materialize_target_for_directory(const.VALIDATION_INPUTS_DIR, const.VALIDATION_TARGETS_DIR, const.COORDS_DATA_DIR)
+    print("Validation done...")
