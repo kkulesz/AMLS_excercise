@@ -16,8 +16,8 @@ def create_dir_if_doesnt_exist(data_dir):
         os.makedirs(data_dir)
 
 
-def display_image(img):
-    img = img[:, :, :3]  # take irg channels for plotting
+def display_image(original_img):
+    img = original_img[:, :, :3]  # take irg channels for plotting
     img = np.maximum(0, img)
     img = np.power(img, 0.5)  # square root to make the high value pixels less dominant
     plt.figure()

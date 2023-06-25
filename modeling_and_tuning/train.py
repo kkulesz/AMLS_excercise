@@ -18,15 +18,18 @@ import const
 device = utils.get_device()
 
 
-def train_single_epoch(model, loader, optimizer, criterion, epoch):
+def train_single_epoch(model, loader, optimizer, criterion, epoch, dataset_size):
     model.train()
     for i, (input_tensor, target_tensor) in enumerate(loader):
+        iteration = (dataset_size // const.BATCH_SIZE) * epoch + i
         input_tensor = input_tensor.to(device)
         target_tensor = target_tensor.to(device)
         prediction_tensor = model(input_tensor)
 
         loss = criterion(prediction_tensor, target_tensor)
-        wandb.log({"loss": loss}, step=epoch)
+        if iteration % const.LOG_LOSS_ITERATION_INTERVAL == 0:
+            print(f"\tLogging on {iteration} iteration...")
+            wandb.log({"loss": loss}, step=iteration)
 
         optimizer.zero_grad()
         loss.backward()
@@ -89,6 +92,8 @@ if __name__ == "__main__":
 
     csv_path = os.path.join(const.TRAIN_DIR, const.CSV_NAME)
     dataset = SdssDatasetV3(csv_path)
+    print(f"Number of samples = {len(dataset)}")
+
     dataloader = DataLoader(dataset, batch_size=const.BATCH_SIZE, shuffle=True)
     print(f"Number of batches = {len(dataloader)}")
 
@@ -97,7 +102,7 @@ if __name__ == "__main__":
 
     for epoch in range(start_from_epoch, const.NUMBER_OF_EPOCHS):
         print(f"epoch={epoch + 1}")
-        train_single_epoch(mo, dataloader, opt, crt, epoch)
+        train_single_epoch(mo, dataloader, opt, crt, epoch, len(dataset))
         if (epoch + 1) % const.EVALUATE_MODEL_INTERVAL == 0:
             evaluate(mo, epoch)
 

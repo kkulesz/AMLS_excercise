@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # model = UNet(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
     model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
 
-    model.load_state_dict(torch.load("../models_storage/model.pt"))
+    model.load_state_dict(torch.load("model.pt"))
     model.to(utils.get_device())
 
     # raw_input, target_img, result = inference(model, img_size=const.PIECE_SHAPE)
