@@ -12,7 +12,7 @@ import const
 from metrics.metrics import *
 from data_preparation.datasets.dataset_v3 import SdssDatasetV3
 from inference import inference
-from models.unet_v2 import UNetV2Smaller
+from models.unet_v2 import UNetV2Smaller, UNetV2
 
 
 class Trainer:
@@ -41,7 +41,8 @@ class Trainer:
         self.device = device
         self.load_model_from = load_model_from
 
-        self.model = UNetV2Smaller(
+        # self.model = UNetV2Smaller(
+        self.model = UNetV2(
             in_channels=model_input_channels,
             out_channels=model_output_channels,
             bilinear=model_bilinear
@@ -132,7 +133,8 @@ class Trainer:
             "accuracy": acc_score,
             "dice_coefficient": dice_score,
             "iou": iou_score,
-        }, step=epoch)
+        }, step=(self.dataset_size // self.batch_size) * epoch
+        )
 
         # TODO: fix this and uncomment
         # if (epoch + 1) % const.SAVE_VALIDATION_RESULT_IMG_INTERVAL == 0:
@@ -149,6 +151,3 @@ class Trainer:
     def _load_model(self):
         self.model.load_state_dict(torch.load(self.load_model_from))
         self.model.to(self.device)
-
-
-
