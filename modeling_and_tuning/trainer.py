@@ -41,8 +41,8 @@ class Trainer:
         self.device = device
         self.load_model_from = load_model_from
 
-        # self.model = UNetV2Smaller(
-        self.model = UNetV2(
+        self.model = UNetV2Smaller(
+        # self.model = UNetV2(
             in_channels=model_input_channels,
             out_channels=model_output_channels,
             bilinear=model_bilinear
@@ -136,12 +136,8 @@ class Trainer:
         }, step=(self.dataset_size // self.batch_size) * epoch
         )
 
-        # TODO: fix this and uncomment
-        # if (epoch + 1) % const.SAVE_VALIDATION_RESULT_IMG_INTERVAL == 0:
-        #     img = np.maximum(0, result_img)
-        #     img = np.power(img, 0.5)
-        #     img = Image.fromarray(img.astype(np.uint8))
-        #     img.save(os.path.join(const.VALIDATION_OUTPUT_DIR, f"result-{epoch + 1}epoch.jpeg"))
+        if (epoch + 1) % const.SAVE_VALIDATION_RESULT_IMG_INTERVAL == 0:
+            utils.save_image(result_img, f"result-{epoch + 1}epoch.jpeg", dpi=600)
 
     def _checkpoint(self, epoch):
         model_name = f"model-epoch={epoch+1}.pt"

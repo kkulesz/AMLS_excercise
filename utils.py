@@ -27,6 +27,17 @@ def display_image(original_img):
     plt.show()
 
 
+def save_image(original_img, path, dpi=2000):
+    img = original_img[:, :, :3]  # take irg channels for plotting
+    img = np.maximum(0, img)
+    img = np.power(img, 0.5)  # square root to make the high value pixels less dominant
+    plt.figure()
+    plt.axis("off")
+    plt.subplots_adjust(left=0.0, right=1.0, top=1.0, bottom=0.0, wspace=0.0, hspace=0.0)
+    plt.imshow(img)
+    plt.savefig(path, dpi=dpi)
+
+
 def get_device():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Working on {device} device.")

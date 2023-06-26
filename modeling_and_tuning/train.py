@@ -22,7 +22,7 @@ if __name__ == "__main__":
         epochs=const.NUMBER_OF_EPOCHS,
         criterion=crt,
         start_from_epoch=const.START_EPOCH_FROM,
-        load_model_from=f"model-epoch={const.START_EPOCH_FROM+1}.pt",
+        load_model_from=f"../models_storage/smaller-101.pt",
         # evaluate_model_interval=const.EVALUATE_MODEL_INTERVAL,
         # save_model_interval=const.SAVE_MODEL_INTERVAL,
         # log_loss_iteration_interval=const.LOG_LOSS_ITERATION_INTERVAL
