@@ -2,6 +2,22 @@ import os
 
 ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 
+
+IMAGES_TO_DOWNLOAD_METADATA = [
+# list of tuples to easily modify urls
+# format: (<run_num>, <min_seq_number>, <max_seq_number>)
+# eg. (8162, 80, 237)
+# will give results:
+#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0080.fits.bz2
+#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0081.fits.bz2
+#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0082.fits.bz2
+#   and so on...
+    (8162, 80, 80, 6, 6, False),  # 6th (8162, 80, 237); for the sake of comparison - 301/8162/6/frame-irg-008162-6-0080
+    (8162, 81, 85, 6, 6, True),  # 6th (8162, 80, 237); my own selection, similar to test
+    (8110, 11, 15, 1, 1, False),  # (8110, 11, 225); my own selection
+    (3918, 213, 213, 3, 3, True),  # 3th (3918, 28, 434); used in repo
+]
+
 DATA_DIR = os.path.join(ABSOLUTE_PATH, "data")
 ALIGNED_DATA_DIR = os.path.join(DATA_DIR, "aligned")
 COORDS_DATA_DIR = os.path.join(DATA_DIR, "coords")

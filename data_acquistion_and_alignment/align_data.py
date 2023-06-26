@@ -66,13 +66,7 @@ def align_spectral_bands(list_of_bands):
     return result
 
 
-if __name__ == "__main__":
-    utils.create_dir_if_doesnt_exist(const.ALIGNED_DATA_DIR)
-
-    files = utils.listdir_fullpath(const.DATA_DIR)
-    fits_files = list(filter(lambda f: re.search("[0-9]{4}.fits$", f), files))
-
-    # grouping bands of the same image
+def group_bands(fits_files):
     grouping_dict = {}
     for f in fits_files:
         img_id = re.search(const.IMG_ID_REGEX, f).group()
@@ -80,12 +74,33 @@ if __name__ == "__main__":
             grouping_dict[img_id].append(f)
         else:
             grouping_dict[img_id] = [f]
+    return grouping_dict
 
+
+def align_grouped_bands(grouped_bands, aligned_data_dir):
     # aligning bands of the same image
-    for item in grouping_dict.items():
+    for item in grouped_bands.items():
         image_id, bands = item
         aligned_bands = align_spectral_bands(bands)
 
-        path = os.path.join(const.ALIGNED_DATA_DIR, f"{image_id}")
+        path = os.path.join(aligned_data_dir, f"{image_id}")
         np.save(path, aligned_bands, allow_pickle=True)
 
+
+def read_fits_files_and_align_them(fits_files_dir, dir_to_save_aligned):
+    files = utils.listdir_fullpath(fits_files_dir)
+    fits_files = list(filter(lambda f: re.search("[0-9]{4}.fits$", f), files))
+
+    grouped_bands = group_bands(fits_files)
+    align_grouped_bands(grouped_bands, dir_to_save_aligned)
+
+
+def main():
+    aligned_data_dir = const.ALIGNED_DATA_DIR
+    utils.create_dir_if_doesnt_exist(aligned_data_dir)
+
+    read_fits_files_and_align_them(const.DATA_DIR, aligned_data_dir)
+
+
+if __name__ == "__main__":
+    main()

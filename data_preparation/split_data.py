@@ -127,15 +127,29 @@ def _prepare_dirs():
     utils.create_dir_if_doesnt_exist(const.VALIDATION_INPUTS_DIR)
 
 
-if __name__ == "__main__":
-    _prepare_dirs()
-
+def split_data_based_on_ratio(
+        aligned_data_dir, coords_dir,
+        test_inputs_dir, train_inputs_dir, validation_inputs_dir
+):
     images_with_counts = get_images_with_gal_and_star_count(
-        const.ALIGNED_DATA_DIR, const.COORDS_DATA_DIR
+        aligned_data_dir, coords_dir
     )
 
     validation_set, train_set, test_set = split_data(images_with_counts, const.IMAGES_TO_ASSIGN_TO_TEST_SET)
 
-    copy_files_into_destination_dir(test_set, const.TEST_INPUTS_DIR)
-    copy_files_into_destination_dir(train_set, const.TRAIN_INPUTS_DIR)
-    copy_files_into_destination_dir(validation_set, const.VALIDATION_INPUTS_DIR)
+    copy_files_into_destination_dir(test_set, test_inputs_dir)
+    copy_files_into_destination_dir(train_set, train_inputs_dir)
+    copy_files_into_destination_dir(validation_set, validation_inputs_dir)
+
+
+def main():
+    _prepare_dirs()
+
+    split_data_based_on_ratio(
+        const.ALIGNED_DATA_DIR, const.COORDS_DATA_DIR,
+        const.TEST_INPUTS_DIR, const.TRAIN_INPUTS_DIR, const.VALIDATION_INPUTS_DIR
+    )
+
+
+if __name__ == "__main__":
+    main()

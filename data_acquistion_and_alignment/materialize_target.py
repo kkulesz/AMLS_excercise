@@ -68,10 +68,14 @@ def materialize_target_for_directory(data_dir, target_data_dir, coords_dir):
         materialize_target(img, gal, star, target_data_dir)
 
 
-if __name__ == "__main__":
+def main():
     materialize_target_for_directory(const.TRAIN_INPUTS_DIR, const.TRAIN_TARGETS_DIR, const.COORDS_DATA_DIR)
     print("Train done...")
     materialize_target_for_directory(const.TEST_INPUTS_DIR, const.TEST_TARGETS_DIR, const.COORDS_DATA_DIR)
     print("Test done...")
     materialize_target_for_directory(const.VALIDATION_INPUTS_DIR, const.VALIDATION_TARGETS_DIR, const.COORDS_DATA_DIR)
     print("Validation done...")
+
+
+if __name__ == "__main__":
+    main()

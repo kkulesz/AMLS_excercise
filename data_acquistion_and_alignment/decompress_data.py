@@ -25,8 +25,11 @@ def decompress_gzip_files(list_of_files):
         print(f"Decompressed: {file}")
 
 
-if __name__ == "__main__":
-    files = utils.listdir_fullpath(const.DATA_DIR)
-
+def decompress_everything_needed(data_dir):
+    files = utils.listdir_fullpath(data_dir)
     decompress_bz2_files(files)
     decompress_gzip_files(files)
+
+
+if __name__ == "__main__":
+    decompress_everything_needed(const.DATA_DIR)

@@ -43,10 +43,14 @@ def split_images_in_directory(data_directory, inputs_directory, target_directory
     df.to_csv(os.path.join(data_directory, const.CSV_NAME))
 
 
-if __name__ == "__main__":
+def main():
     split_images_in_directory(const.TRAIN_DIR, const.TRAIN_INPUTS_DIR, const.TRAIN_TARGETS_DIR)
     print("Train done...")
     split_images_in_directory(const.TEST_DIR, const.TEST_INPUTS_DIR, const.TEST_TARGETS_DIR)
     print("Test done...")
-    split_images_in_directory(const.TRAIN_DIR, const.TRAIN_INPUTS_DIR, const.TRAIN_TARGETS_DIR)
+    split_images_in_directory(const.VALIDATION_DIR, const.VALIDATION_INPUTS_DIR, const.VALIDATION_TARGETS_DIR)
     print("Validation done...")
+
+
+if __name__ == "__main__":
+    main()
