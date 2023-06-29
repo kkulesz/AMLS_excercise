@@ -1,19 +1,5 @@
-"""
-TODO:
-    Subsequently, compute meaningful summary statistics and visualization
-    (e.g., a comparison of aligned and unaligned images).
-
-    meaning:
-        2. distribution of gals/stars:
-            - in all downloaded data
-            - in runs
-            - in columns?
-"""
 from astropy.io import fits
 import numpy as np
-from PIL import Image
-from matplotlib import pyplot as plt
-import random
 
 import const
 import utils
@@ -48,8 +34,8 @@ def save_aligned_and_not(image_num):
     # utils.display_image(irg_unaligned)
     # utils.display_image(irg_aligned)
 
-    utils.save_image(irg_aligned, "aligned.jpg")
-    utils.save_image(irg_unaligned, "unaligned.jpg")
+    utils.save_image(irg_aligned, "artifacts/aligned.jpg")
+    utils.save_image(irg_unaligned, "artifacts/unaligned.jpg")
 
 
 def main():
