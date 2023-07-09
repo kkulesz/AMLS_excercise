@@ -8,6 +8,7 @@ import utils
 
 if __name__ == "__main__":
     device = utils.get_device()
+    utils.seed_torch()
 
     train_csv_path = os.path.join(const.TRAIN_DIR, const.CSV_NAME)
     test_csv_path = os.path.join(const.TEST_DIR, const.CSV_NAME)
@@ -29,9 +30,6 @@ if __name__ == "__main__":
         criterion=crt,
         start_from_epoch=const.START_EPOCH_FROM,
         load_model_from=f"../models_storage/smaller-101.pt",
-        # evaluate_model_interval=const.EVALUATE_MODEL_INTERVAL,
-        # save_model_interval=const.SAVE_MODEL_INTERVAL,
-        # log_loss_iteration_interval=const.LOG_LOSS_ITERATION_INTERVAL
     )
 
     start_time = time.time()

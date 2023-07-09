@@ -1,0 +1,3 @@
+	LR	BS	TIME		LOSS
+Result: (0.01, 32,  1141.0814385414124, tensor(0.0048, device='cuda:0', dtype=torch.float64))
+Result: (0.01, 128, 3316.692100048065,  tensor(0.0011, device='cuda:0', dtype=torch.float64))
