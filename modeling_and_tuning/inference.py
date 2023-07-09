@@ -7,7 +7,6 @@ import random
 
 import utils
 import const
-from models.unet import UNet
 from models.unet_v2 import UNetV2, UNetV2Smaller
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
@@ -64,8 +63,8 @@ def inference(
 
 
 if __name__ == "__main__":
-    model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    # model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
+    # model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
+    model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
 
     model.load_state_dict(torch.load("../models_storage/bigger-101.pt"))
     model.to(utils.get_device())
