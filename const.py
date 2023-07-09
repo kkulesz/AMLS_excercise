@@ -2,16 +2,15 @@ import os
 
 ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 
-
 IMAGES_TO_DOWNLOAD_METADATA = [
-# list of tuples to easily modify urls
-# format: (<run_num>, <min_seq_number>, <max_seq_number>)
-# eg. (8162, 80, 237)
-# will give results:
-#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0080.fits.bz2
-#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0081.fits.bz2
-#   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0082.fits.bz2
-#   and so on...
+    # list of tuples to easily modify urls
+    # format: (<run_num>, <min_seq_number>, <max_seq_number>)
+    # eg. (8162, 80, 237)
+    # will give results:
+    #   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0080.fits.bz2
+    #   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0081.fits.bz2
+    #   https://data.sdss.org/sas/dr17/eboss/photoObj/frames/301/8162/3/frame-r-008162-1-0082.fits.bz2
+    #   and so on...
     (8162, 80, 80, 6, 6, False),  # 6th (8162, 80, 237); for the sake of comparison - 301/8162/6/frame-irg-008162-6-0080
     (8162, 81, 85, 6, 6, True),  # 6th (8162, 80, 237); my own selection, similar to test
     (8110, 11, 15, 1, 1, False),  # (8110, 11, 225); my own selection
@@ -61,15 +60,15 @@ CSV_NAME = 'files.csv'
 CSV_INPUT_COL = 'input'
 CSV_TARGET_COL = 'target'
 
-
 INPUT_CHANNELS = 5
 OUTPUT_CHANNELS = 3
-LEARNING_RATE = 0.0001
-BATCH_SIZE = 256
+LEARNING_RATE = 0.0001  # 0.0001
+BATCH_SIZE = 256  # 256
 ADAM_BETAS = (0.5, 0.999)
-START_EPOCH_FROM = 100
-NUMBER_OF_EPOCHS = 125
-BILINEAR = False
+START_EPOCH_FROM = 0
+NUMBER_OF_EPOCHS = 20
+
+VALIDATION_EPOCHS = 10
 
 SAVE_MODEL_INTERVAL = 10
 EVALUATE_MODEL_INTERVAL = 1

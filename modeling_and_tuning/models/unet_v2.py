@@ -40,16 +40,11 @@ class Down(nn.Module):
 class Up(nn.Module):
     """Upscaling then double conv"""
 
-    def __init__(self, in_channels, out_channels, bilinear=False):
+    def __init__(self, in_channels, out_channels):
         super().__init__()
 
-        # if bilinear, use the normal convolutions to reduce the number of channels
-        if bilinear:
-            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
-            self.conv = DoubleConv(in_channels, out_channels, in_channels // 2)
-        else:
-            self.up = nn.ConvTranspose2d(in_channels, in_channels // 2, kernel_size=2, stride=2)
-            self.conv = DoubleConv(in_channels, out_channels)
+        self.up = nn.ConvTranspose2d(in_channels, in_channels // 2, kernel_size=2, stride=2)
+        self.conv = DoubleConv(in_channels, out_channels)
 
     def forward(self, x1, x2):
         x1 = self.up(x1)
@@ -76,19 +71,18 @@ class OutConv(nn.Module):
 
 
 class UNetV2(nn.Module):
-    def __init__(self, in_channels, out_channels, bilinear=False):
+    def __init__(self, in_channels, out_channels):
         super(UNetV2, self).__init__()
 
         self.inc = (DoubleConv(in_channels, 64))
         self.down1 = (Down(64, 128))
         self.down2 = (Down(128, 256))
         self.down3 = (Down(256, 512))
-        factor = 2 if bilinear else 1
-        self.down4 = (Down(512, 1024 // factor))
-        self.up1 = (Up(1024, 512 // factor, bilinear))
-        self.up2 = (Up(512, 256 // factor, bilinear))
-        self.up3 = (Up(256, 128 // factor, bilinear))
-        self.up4 = (Up(128, 64, bilinear))
+        self.down4 = (Down(512, 1024))
+        self.up1 = (Up(1024, 512))
+        self.up2 = (Up(512, 256))
+        self.up3 = (Up(256, 128))
+        self.up4 = (Up(128, 64))
         self.outc = (OutConv(64, out_channels))
 
     def forward(self, x):
@@ -106,17 +100,16 @@ class UNetV2(nn.Module):
 
 
 class UNetV2Smaller(nn.Module):
-    def __init__(self, in_channels, out_channels, bilinear=False):
+    def __init__(self, in_channels, out_channels):
         super(UNetV2Smaller, self).__init__()
 
         self.inc = (DoubleConv(in_channels, 64))
         self.down1 = (Down(64, 128))
         self.down2 = (Down(128, 256))
         self.down3 = (Down(256, 512))
-        factor = 2 if bilinear else 1
-        self.up2 = (Up(512, 256 // factor, bilinear))
-        self.up3 = (Up(256, 128 // factor, bilinear))
-        self.up4 = (Up(128, 64, bilinear))
+        self.up2 = (Up(512, 256))
+        self.up3 = (Up(256, 128))
+        self.up4 = (Up(128, 64))
         self.outc = (OutConv(64, out_channels))
 
     def forward(self, x):

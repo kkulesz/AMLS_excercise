@@ -1,11 +1,7 @@
 import torch
-from torch import nn
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 import wandb
-import numpy as np
-import os
-from PIL import Image
 
 import utils
 import const
@@ -21,9 +17,10 @@ class Trainer:
             # model parameters
             model_input_channels,
             model_output_channels,
-            model_bilinear,
             # dataset/loader parameters
-            data_csv_path,
+            train_data_csv_path,
+            test_data_csv_path,
+            validation_data_csv_path,
             batch_size,
             # optimizer parameters
             learning_rate,
@@ -44,8 +41,7 @@ class Trainer:
         self.model = UNetV2Smaller(
         # self.model = UNetV2(
             in_channels=model_input_channels,
-            out_channels=model_output_channels,
-            bilinear=model_bilinear
+            out_channels=model_output_channels
         ).to(self.device)
 
         self.epochs = epochs
@@ -57,11 +53,21 @@ class Trainer:
             self.start_from_epoch = 0
             print("Starting training from scratch...")
 
-        self.dataset = SdssDatasetV3(data_csv_path)
-        self.dataset_size = len(self.dataset)
+        self.train_dataset = SdssDatasetV3(train_data_csv_path)
+        self.test_dataset = SdssDatasetV3(test_data_csv_path)
+        self.validation_dataset = SdssDatasetV3(validation_data_csv_path)
+
+        self.train_dataset_size = len(self.train_dataset)
         self.batch_size = batch_size
-        self.dataloader = DataLoader(
-            self.dataset, batch_size=self.batch_size, shuffle=True
+
+        self.train_dataloader = DataLoader(
+            self.train_dataset, batch_size=self.batch_size, shuffle=True
+        )
+        self.test_dataloader = DataLoader(
+            self.test_dataset, batch_size=self.batch_size, shuffle=False
+        )
+        self.validation_dataloader = DataLoader(
+            self.validation_dataset, batch_size=self.batch_size, shuffle=False
         )
 
         self.optimizer = Adam(
@@ -83,7 +89,7 @@ class Trainer:
 
             if (epoch + 1) % self.evaluate_model_interval == 0:
                 print(f"Evaluating model after epoch {epoch + 1}... ", end='')
-                self._evaluate(epoch + 1)
+                self._evaluate_on_fixed_test_image(epoch + 1)
                 print("Done")
 
             if (epoch + 1) % self.save_model_interval == 0:
@@ -97,8 +103,8 @@ class Trainer:
 
     def _train_single_epoch(self, epoch):
         self.model.train()
-        for i, (input_tensor, target_tensor) in enumerate(self.dataloader):
-            iteration = (self.dataset_size // self.batch_size) * epoch + i
+        for i, (input_tensor, target_tensor) in enumerate(self.train_dataloader):
+            iteration = (self.train_dataset_size // self.batch_size) * epoch + i
             input_tensor = input_tensor.to(self.device)
             target_tensor = target_tensor.to(self.device)
             prediction_tensor = self.model(input_tensor)
@@ -112,7 +118,7 @@ class Trainer:
             loss.backward()
             self.optimizer.step()
 
-    def _evaluate(self, epoch):
+    def _evaluate_on_fixed_test_image(self, epoch):
         self.model.eval()
 
         _, target_img, result_img = inference(self.model)
@@ -133,7 +139,7 @@ class Trainer:
             "accuracy": acc_score,
             "dice_coefficient": dice_score,
             "iou": iou_score,
-        }, step=(self.dataset_size // self.batch_size) * epoch
+        }, step=(self.train_dataset_size // self.batch_size) * epoch
         )
 
         if (epoch + 1) % const.SAVE_VALIDATION_RESULT_IMG_INTERVAL == 0:
