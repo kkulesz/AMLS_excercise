@@ -71,7 +71,8 @@ class Trainer:
         self.criterion = criterion
 
         wandb.login()
-        wandb.init(project="AMLS", entity="luizz", reinit=True, name=f"batch_size={batch_size};lr={learning_rate}")
+        self.name = f"tuned-model-smaller"
+        wandb.init(project="AMLS", entity="luizz", reinit=True, name=self.name)
 
         self.validate_model_interval = validate_model_interval
         self.test_model_interval = test_model_interval
@@ -81,15 +82,15 @@ class Trainer:
 
     def train(self):
         for epoch in range(self.start_from_epoch, self.epochs):
-            print(f"Epoch: {epoch + 1}")
+            print(f"Epoch: {epoch + 1}", end='')
             train_loss = self._train_single_epoch()
-            print(f"\tTraining loss after epoch number {epoch+1}: {train_loss}")
+            print(f"training loss: {train_loss}")
             wandb.log({"training_loss": train_loss}, step=epoch+1)
 
-            if (epoch + 1) % self.validate_model_interval == 0:
-                print(f"Evaluating on validation set after epoch number {epoch + 1}... ", end='')
-                self._validate(epoch + 1)
-                print("Done")
+            # if (epoch + 1) % self.validate_model_interval == 0:
+            #     print(f"Evaluating on validation set after epoch number {epoch + 1}... ", end='')
+            #     self._validate(epoch + 1)
+            #     print("Done")
 
             if (epoch + 1) % self.test_model_interval == 0:
                 print(f"Evaluating on test set after epoch number {epoch + 1}... ", end='')
@@ -180,7 +181,7 @@ class Trainer:
         # )
 
     def _checkpoint(self, epoch):
-        model_name = f"model-epoch={epoch}.pt"
+        model_name = f"{self.name}-{epoch}epochs.pt"
 
         torch.save(self.model.state_dict(), model_name)
 
