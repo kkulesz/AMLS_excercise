@@ -159,7 +159,7 @@ class Trainer:
         self.model.eval()
 
         _, _, result_img = inference(self.model)
-        utils.save_image(result_img.astype('uint8'), f"result-{epoch}epoch.jpeg", dpi=600)
+        utils.save_image(result_img, f"result-{epoch}epoch.jpeg", dpi=600)
 
         # target_img = utils.clip_target_to_output_shape(target_img, result_img)
         #
