@@ -82,7 +82,7 @@ class Trainer:
 
     def train(self):
         for epoch in range(self.start_from_epoch, self.epochs):
-            print(f"Epoch: {epoch + 1}", end='')
+            print(f"Epoch: {epoch + 1}... ", end='')
             train_loss = self._train_single_epoch()
             print(f"training loss: {train_loss}")
             wandb.log({"training_loss": train_loss}, step=epoch+1)
@@ -159,7 +159,7 @@ class Trainer:
         self.model.eval()
 
         _, _, result_img = inference(self.model)
-        utils.save_image(result_img, f"result-{epoch}epoch.jpeg", dpi=600)
+        utils.save_image(result_img.astype('uint8'), f"result-{epoch}epoch.jpeg", dpi=600)
 
         # target_img = utils.clip_target_to_output_shape(target_img, result_img)
         #

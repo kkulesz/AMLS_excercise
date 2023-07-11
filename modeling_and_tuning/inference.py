@@ -25,9 +25,9 @@ def inference(
         if img_size:
             piece_H, piece_W = img_size
 
-            # mul = 10
-            # piece_H = piece_H*mul
-            # piece_W = piece_W*mul
+            mul = 10
+            piece_H = piece_H*mul
+            piece_W = piece_W*mul
 
             org_H, org_W, _ = raw_input_img.shape
             start_h = random.randint(0, org_H - piece_H)
@@ -64,9 +64,9 @@ def inference(
 
 if __name__ == "__main__":
     # model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
-    model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
+    model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS)
 
-    model.load_state_dict(torch.load("../models_storage/bigger-101.pt"))
+    model.load_state_dict(torch.load("../models_storage/tuned-smaller/tuned-model-smaller-60epochs.pt"))
     model.to(utils.get_device())
 
     raw_input_img, target_img, result = inference(model, img_size=const.PIECE_SHAPE)
