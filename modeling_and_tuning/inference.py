@@ -7,7 +7,7 @@ import random
 
 import utils
 import const
-from models.unet_v2 import UNetV2, UNetV2Smaller
+from modeling_and_tuning.models.unet_v2 import UNetV2, UNetV2Smaller
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1024"
 
