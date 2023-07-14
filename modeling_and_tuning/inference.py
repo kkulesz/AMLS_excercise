@@ -66,7 +66,7 @@ if __name__ == "__main__":
     # model = UNetV2(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS, bilinear=const.BILINEAR)
     model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS)
 
-    model.load_state_dict(torch.load("../models_storage/tuned-smaller/tuned-model-smaller-60epochs.pt"))
+    model.load_state_dict(torch.load("../models_storage/tuned-smaller/tuned-60epochs.pt"))
     model.to(utils.get_device())
 
     raw_input_img, target_img, result = inference(model, img_size=const.PIECE_SHAPE)

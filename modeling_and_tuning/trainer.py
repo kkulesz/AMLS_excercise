@@ -18,9 +18,9 @@ class Trainer:
             model_input_channels,
             model_output_channels,
             # dataset/loader parameters
-            train_data_csv_path,
-            test_data_csv_path,
-            validation_data_csv_path,
+            train_dataset,
+            test_dataset,
+            validation_dataset,
             batch_size,
             # optimizer parameters
             learning_rate,
@@ -55,9 +55,9 @@ class Trainer:
             self.start_from_epoch = 0
             print("Starting training from scratch...")
 
-        self.train_dataset = SdssDatasetV3(train_data_csv_path)
-        self.test_dataset = SdssDatasetV3(test_data_csv_path)
-        self.validation_dataset = SdssDatasetV3(validation_data_csv_path)
+        self.train_dataset = train_dataset
+        self.test_dataset = test_dataset
+        self.validation_dataset = validation_dataset
 
         self.train_dataset_size = len(self.train_dataset)
         self.batch_size = batch_size
@@ -160,25 +160,6 @@ class Trainer:
 
         _, _, result_img = inference(self.model)
         utils.save_image(result_img, f"result-{epoch}epoch.jpeg", dpi=600)
-
-        # target_img = utils.clip_target_to_output_shape(target_img, result_img)
-        #
-        # prec_score = precision_score(target_img, result_img)
-        # rec_score = recall_score(target_img, result_img)
-        # acc_score = accuracy(target_img, result_img)
-        # dice_score = dice_coef(target_img, result_img)
-        # iou_score = iou(target_img, result_img)
-        #
-        # utils.display_image(result_img)
-        #
-        # wandb.log({
-        #     "precision": prec_score,
-        #     "recall": rec_score,
-        #     "accuracy": acc_score,
-        #     "dice_coefficient": dice_score,
-        #     "iou": iou_score,
-        # }, step=(self.train_dataset_size // self.batch_size) * epoch
-        # )
 
     def _checkpoint(self, epoch):
         model_name = f"{self.name}-{epoch}epochs.pt"
