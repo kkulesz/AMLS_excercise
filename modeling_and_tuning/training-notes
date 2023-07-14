@@ -2,6 +2,9 @@ Tuned: lr=0.0001 batch_size=256
 Trained 20 epochs in 3677.844493627548
 Trained 40 epochs in 4544.392065525055
 
+Trained 50 epochs in 5680.104067325592
+
+
 
 Not tuned: lr=0.01 batch_size=32
 Trained 20 epochs in 1782.9483523368835

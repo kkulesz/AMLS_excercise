@@ -71,7 +71,7 @@ class Trainer:
         self.criterion = criterion
 
         wandb.login()
-        self.name = f"not-tuned-model-smaller"
+        self.name = f"tuned"
         wandb.init(project="AMLS", entity="luizz", reinit=True, name=self.name)
 
         self.validate_model_interval = validate_model_interval

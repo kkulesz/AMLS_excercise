@@ -29,7 +29,7 @@ if __name__ == "__main__":
         epochs=const.NUMBER_OF_EPOCHS,
         criterion=crt,
         start_from_epoch=const.START_EPOCH_FROM,
-        load_model_from=f"../models_storage/not-tuned-smaller/not-tuned-model-smaller-60epochs.pt",
+        load_model_from=f"../models_storage/tuned-smaller/tuned-model-smaller-100epochs.pt",
     )
 
     start_time = time.time()
