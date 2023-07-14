@@ -12,7 +12,7 @@ from modeling_and_tuning.inference import inference
 
 def main():
     device = utils.get_device()
-    models_dir = os.path.join(const.ABSOLUTE_PATH, "models_storage", "tuned-smaller")
+    models_dir = os.path.join(const.ABSOLUTE_PATH, "models_storage", "not-tuned-smaller")
     models_files = utils.listdir_fullpath(models_dir)
     models_files = list(sorted(models_files))
 
@@ -20,8 +20,8 @@ def main():
         print(f)
         epoch_piece = re.findall(r'\d+epoch', f)[0]
         epoch = int(re.search(r'\d+[^0-9]', epoch_piece).group()[:-1])
-        if epoch < 60:
-            continue
+        # if epoch < 60:
+        #     continue
 
         model = UNetV2Smaller(const.INPUT_CHANNELS, const.OUTPUT_CHANNELS).to(device)
         model.load_state_dict(torch.load(f))
