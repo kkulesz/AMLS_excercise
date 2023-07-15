@@ -5,10 +5,10 @@ import wandb
 
 import utils
 import const
-from metrics.metrics import *
 from data_preparation.datasets.dataset_v3 import SdssDatasetV3
-from inference import inference
-from models.unet_v2 import UNetV2Smaller, UNetV2
+from modeling_and_tuning.metrics.metrics import *
+from modeling_and_tuning.inference import inference
+from modeling_and_tuning.models.unet_v2 import UNetV2Smaller, UNetV2
 
 
 class Trainer:

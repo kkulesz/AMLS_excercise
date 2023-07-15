@@ -9,17 +9,21 @@ import const
 
 
 class SdssDatasetV3(Dataset):
-    def __init__(self, csv_name, max_size=None):
+    def __init__(self, csv_name, transform=None):
         self.df = pd.read_csv(csv_name)
-        if max_size:
-            self.size = min(max_size, len(self.df.index))
-        else:
-            self.size = len(self.df.index)
+        self.size = len(self.df.index)
+        self.transform = transform
 
     def __len__(self):
-        return self.size
+        if self.transform:
+            return self.size * 2
+        else:
+            return self.size
 
     def __getitem__(self, idx):
+        if idx > self.size:
+            idx = self.size - idx
+
         row = self.df.iloc[idx]
         input_f = row[const.CSV_INPUT_COL]
         target_f = row[const.CSV_TARGET_COL]
@@ -29,6 +33,10 @@ class SdssDatasetV3(Dataset):
 
         input_data = torch.from_numpy(input_data)
         target_data = torch.from_numpy(target_data)
+
+        if self.transform:
+            input_data = self.transform(input_data)
+            target_data = self.transform(target_data)
 
         input_data = self._reshape(input_data)
         target_data = self._reshape(target_data)
