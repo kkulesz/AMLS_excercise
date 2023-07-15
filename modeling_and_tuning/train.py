@@ -33,7 +33,8 @@ if __name__ == "__main__":
         epochs=const.NUMBER_OF_EPOCHS,
         criterion=crt,
         start_from_epoch=const.START_EPOCH_FROM,
-        load_model_from=f"../models_storage/tuned-smaller/tuned-model-smaller-150epochs.pt",
+        load_model_from=const.LOAD_MODEL_FROM,
+        model_name=const.MODEL_NAME
     )
 
     start_time = time.time()

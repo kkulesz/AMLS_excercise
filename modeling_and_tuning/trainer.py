@@ -31,6 +31,7 @@ class Trainer:
             criterion,
             start_from_epoch,
             load_model_from,
+            model_name,
             validate_model_interval=const.VALIDATE_MODEL_INTERVAL,
             test_model_interval=const.TEST_MODEL_INTERVAL,
             save_inference_result_img_interval=const.SAVE_INFERENCE_RESULT_IMG_INTERVAL,
@@ -71,7 +72,7 @@ class Trainer:
         self.criterion = criterion
 
         wandb.login()
-        self.name = f"tuned"
+        self.name = model_name
         wandb.init(project="AMLS", entity="luizz", reinit=True, name=self.name)
 
         self.validate_model_interval = validate_model_interval
