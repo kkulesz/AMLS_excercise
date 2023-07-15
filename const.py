@@ -65,9 +65,9 @@ OUTPUT_CHANNELS = 3
 LEARNING_RATE = 0.01  # 0.0001
 BATCH_SIZE = 32  # 256
 ADAM_BETAS = (0.5, 0.999)
-START_EPOCH_FROM = 100
-NUMBER_OF_EPOCHS = 150
-LOAD_MODEL_FROM = f"../models_storage/not-tuned-smaller/not-tuned-model-smaller-100epochs.pt"
+START_EPOCH_FROM = 150
+NUMBER_OF_EPOCHS = 200
+LOAD_MODEL_FROM = f"../models_storage/not-tuned-smaller/not-tuned-150epochs.pt"
 MODEL_NAME = f"not-tuned"
 
 VALIDATION_EPOCHS = 10
