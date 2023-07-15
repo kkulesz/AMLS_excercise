@@ -3,6 +3,7 @@ import torch.nn as nn
 import time
 from itertools import product
 
+from data_preparation.datasets.dataset_v3 import SdssDatasetV3
 from trainer import Trainer
 import const
 import utils
@@ -13,14 +14,18 @@ def get_trainer(device, epochs, learning_rate, batch_size):
     test_csv_path = os.path.join(const.TEST_DIR, const.CSV_NAME)
     validation_csv_path = os.path.join(const.VALIDATION_DIR, const.CSV_NAME)
 
+    train_dataset = SdssDatasetV3(train_csv_path)
+    test_dataset = SdssDatasetV3(test_csv_path)
+    validation_dataset = SdssDatasetV3(validation_csv_path)
+
     crt = nn.CrossEntropyLoss() if const.OUTPUT_CHANNELS > 1 else nn.BCEWithLogitsLoss()
 
     trainer = Trainer(
         model_input_channels=const.INPUT_CHANNELS,
         model_output_channels=const.OUTPUT_CHANNELS,
-        train_data_csv_path=train_csv_path,
-        test_data_csv_path=test_csv_path,
-        validation_data_csv_path=validation_csv_path,
+        train_dataset=train_dataset,
+        test_dataset=test_dataset,
+        validation_dataset=validation_dataset,
         batch_size=batch_size,
         learning_rate=learning_rate,
         adam_betas=const.ADAM_BETAS,
@@ -28,7 +33,8 @@ def get_trainer(device, epochs, learning_rate, batch_size):
         epochs=epochs,
         criterion=crt,
         start_from_epoch=0,
-        load_model_from=f"../models_storage/smaller-101.pt",
+        model_name=f"{learning_rate};{batch_size}",
+        load_model_from=""
     )
 
     return trainer
