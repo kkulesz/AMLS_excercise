@@ -4,6 +4,7 @@ import re
 import numpy as np
 import torch
 import random
+import cv2
 
 import utils
 import const
@@ -32,13 +33,15 @@ class SdssDatasetV3(Dataset):
         input_data = np.load(input_f)
         target_data = np.load(target_f)
 
+        # input_data = cv2.flip(input_data, 0)
+        # target_data = cv2.flip(target_data, 0)
+
         input_data = torch.from_numpy(input_data)
         target_data = torch.from_numpy(target_data)
 
         if self.transform:
             input_data = self.transform(input_data)
             target_data = self.transform(target_data)
-
         input_data = self._reshape(input_data)
         target_data = self._reshape(target_data)
 

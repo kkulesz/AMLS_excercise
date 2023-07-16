@@ -32,7 +32,9 @@ def main():
     device = utils.get_device()
     utils.seed_torch()
 
-    transform = RandomHorizontalFlip(p=const.TRANSFORM_PROBABILITY)
+    # transform = RandomHorizontalFlip(p=const.TRANSFORM_PROBABILITY)
+    # transform = RandomHorizontalFlip(p=1)
+    transform = RandomVerticalFlip(p=1)
     name = transform.__class__.__name__
 
     train_csv_path = os.path.join(const.TRAIN_DIR, const.CSV_NAME)
@@ -42,7 +44,7 @@ def main():
     train_dataset = SdssDatasetV3(train_csv_path, transform=transform)
     test_dataset = SdssDatasetV3(test_csv_path)
     validation_dataset = SdssDatasetV3(validation_csv_path)
-
+    # train_dataset[2]
     trainer = get_trainer(train_dataset, test_dataset, validation_dataset, device, name)
 
     trainer.train()
