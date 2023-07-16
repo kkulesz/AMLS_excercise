@@ -16,7 +16,8 @@ def inference(
         model: nn.Module,
         img_size: (int, int) = None,
         input_path: str = const.VALIDATE_INPUT_PATH,
-        target_path: str = const.VALIDATE_TARGET_PATH
+        target_path: str = const.VALIDATE_TARGET_PATH,
+        random=True
 ):
     with torch.no_grad():
         raw_input_img = np.load(input_path)
@@ -25,13 +26,16 @@ def inference(
         if img_size:
             piece_H, piece_W = img_size
 
-            mul = 10
-            piece_H = piece_H*mul
-            piece_W = piece_W*mul
-
-            org_H, org_W, _ = raw_input_img.shape
-            start_h = random.randint(0, org_H - piece_H)
-            start_w = random.randint(0, org_W - piece_W)
+            # mul = 10
+            # piece_H = piece_H*mul
+            # piece_W = piece_W*mul
+            if random:
+                org_H, org_W, _ = raw_input_img.shape
+                start_h = random.randint(0, org_H - piece_H)
+                start_w = random.randint(0, org_W - piece_W)
+            else:
+                start_h = 0
+                start_w = 0
             raw_input_img = raw_input_img[start_h:start_h + piece_H, start_w:start_w + piece_W, :]
             target_img = target_img[start_h:start_h + piece_H, start_w:start_w + piece_W, :]
 
