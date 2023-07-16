@@ -3,6 +3,7 @@ from torch.utils.data import Dataset
 import re
 import numpy as np
 import torch
+import random
 
 import utils
 import const
@@ -11,18 +12,18 @@ import const
 class SdssDatasetV3(Dataset):
     def __init__(self, csv_name, transform=None):
         self.df = pd.read_csv(csv_name)
-        self.size = len(self.df.index)
+        self.real_size = len(self.df.index)
         self.transform = transform
 
     def __len__(self):
         if self.transform:
-            return self.size * 2
+            return int(self.real_size * const.AUGMENTATION_MULTIPLIER)
         else:
-            return self.size
+            return self.real_size
 
     def __getitem__(self, idx):
-        if idx > self.size:
-            idx = self.size - idx
+        if idx >= self.real_size:
+            idx = random.randint(0, self.real_size-1)
 
         row = self.df.iloc[idx]
         input_f = row[const.CSV_INPUT_COL]

@@ -4,7 +4,7 @@ from_example_provided/*.pkl
 from_example_provided/*.pdf
 from_example_provided/*.bz2
 models_storage/
-modeling_and_tuning/wandb/
+*/wandb/*
 validation_outputs/
 
 # Byte-compiled / optimized / DLL files
