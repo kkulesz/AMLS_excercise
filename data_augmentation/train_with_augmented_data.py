@@ -1,6 +1,6 @@
 import os
 import torch.nn as nn
-from torchvision.transforms import RandomHorizontalFlip, RandomVerticalFlip
+from torchvision.transforms import RandomHorizontalFlip, RandomVerticalFlip, RandomRotation
 
 import const
 import utils
@@ -32,7 +32,7 @@ def main():
     device = utils.get_device()
     utils.seed_torch()
 
-    transform = RandomVerticalFlip(p=const.TRANSFORM_PROBABILITY)
+    transform = RandomHorizontalFlip(p=const.TRANSFORM_PROBABILITY)
     name = transform.__class__.__name__
 
     train_csv_path = os.path.join(const.TRAIN_DIR, const.CSV_NAME)
