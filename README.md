@@ -1,14 +1,31 @@
 # AMLS_excercise
 Architecture of Machine Learning Systems 
 
-1. Data acquisition, alignment and preparation pipline:
-- `download_data` - remember to change numbers!
-- `decompress data`
-- `align_data` - aligns data and saves it into `data/aligned` folder
-- `process_coords` - takes coords fits files and r band from `data/aligned` folder -> maps one into another -> saves result in `data/coords/*.csv` files. THIS TAKES SIGNIFICANT AMOUNT OF TIME.
-  - now use `split_data` from data_preparation. This will take the data, split it based on label distribution and save it in `splitted/[test/train/validation]` dirs
-- `materialize_target` - takes `data/splitted/[test/train/validation]` and `data/coords` folders -> creates two images: target and marked -> saves them into `data/splitted/[test/train/validation]/targets` folders
-  - now use `split_into_smaller_pieces` from data_preparation - splits each image into pieces and stores them in `data/splitted/[test/train/validation]/[inputs/target]_pieces`
+Project structure corresponds the instruction:
+1. `data_acquisition_and_alignment`
+2. `data_preparation`
+3. `modeling_and_tuning`
+4. `data_augmentation`
 
-Bonus: `other/delete_files.py` to delete compressed files if they are no longer needed
- 2. TODO
+Each of these directories consists of the code used in this stage, so it is easier to see what have been done in each of them.
+
+Rest of the directories are just by-products of implementation
+
+### In order to train your own model or repeat the results:
+1. Install libraries listed in requirements.txt
+`pip install -r requirements.txt`
+2. Set hyperparameters, paths, etc. in `consts.py`
+3. To prepare the data needed for experiments run `scripts/data_pipeline.py`. This script constst of:
+ - downloading data
+ - decompressing it
+ - aligning spectral bands
+ - reading coordinates of galaxies and stars
+ - splitting data into test/train/validation sets
+ - materializing target images
+ - splitting images into smaller pieces, so they fit in CUDA memory
+4. Run:
+ - `modeling_and_tuning/tune.py` - to choose the best set of hyperparameters
+ - `modeling_and_tuning/train.py` - to train model
+ - `data_augmentation/train_with_augmented_data.py` - to train model with data augmentation techniques
+
+**Note**: you need WeightsAndBiases key to run most of the scripts provided.
