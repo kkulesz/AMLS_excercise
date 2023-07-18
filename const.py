@@ -13,7 +13,7 @@ IMAGES_TO_DOWNLOAD_METADATA = [
     #   and so on...
     (8162, 80, 80, 6, 6, False),  # 6th (8162, 80, 237); for the sake of comparison - 301/8162/6/frame-irg-008162-6-0080
     (8162, 81, 85, 6, 6, True),  # 6th (8162, 80, 237); my own selection, similar to test
-    (8110, 11, 15, 1, 1, False),  # (8110, 11, 225); my own selection
+    (8110, 11, 15, 1, 1, True),  # (8110, 11, 225); my own selection
     (3918, 213, 213, 3, 3, True),  # 3th (3918, 28, 434); used in repo
 ]
 

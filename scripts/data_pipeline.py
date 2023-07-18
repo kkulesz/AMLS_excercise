@@ -46,14 +46,14 @@ def main():
     _prepare_dirs(all_dirs)
     print("\nStarting data pipline...")
 
-    # download_indicated_images(data_dir, metadata_of_images_to_download)
-    # print("Data downloaded...")
-    # decompress_everything_needed(data_dir)
-    # print("Data decompressed...")
-    # read_fits_files_and_align_them(data_dir, aligned_data_dir)
-    # print("Data aligned...")
-    # process_everything_needed(coords_dir, data_dir)
-    # print("Cords processed...")
+    download_indicated_images(data_dir, metadata_of_images_to_download)
+    print("Data downloaded...")
+    decompress_everything_needed(data_dir)
+    print("Data decompressed...")
+    read_fits_files_and_align_them(data_dir, aligned_data_dir)
+    print("Data aligned...")
+    process_everything_needed(coords_dir, data_dir)
+    print("Cords processed...")
 
     split_data_based_on_ratio(
         aligned_data_dir, coords_dir,
